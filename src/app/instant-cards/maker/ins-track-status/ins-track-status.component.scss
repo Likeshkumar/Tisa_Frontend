@@ -1,0 +1,267 @@
+
+.table-container {
+  overflow-x: auto;
+  width: 100%;
+  max-height: 70vh;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  margin: 16px 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card-header-custom-red {
+    background-color: #e72838;
+    color: #fff;
+}
+
+
+.mat-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+
+  .mat-header-row {
+    position: sticky;
+    top: 0;
+    background-color: #f5f5f5 !important;
+    z-index: 2;
+    height: 56px;
+  }
+
+  .mat-header-cell {
+    font-weight: 600;
+    color: #333;
+    background-color: #f5f5f5 !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0 12px;
+    text-align: left;
+    vertical-align: middle;
+    font-size: 14px;
+    line-height: 1.2;
+    border-bottom: 1px solid #e0e0e0;
+
+    &[sortable] {
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+
+      &.desc:before,
+      &.asc:before {
+        content: '';
+        display: block;
+        background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IArs4c6QAAAmxJREFUeAHtmksrRVEUx72fH8CIGQNJkpGUUmakDEiZSJRIZsRQmCkTJRmZmJgQE0kpX0D5DJKJgff7v+ru2u3O3vvc67TOvsdatdrnnP1Y///v7HvvubdbUiIhBISAEBACQkAICAEhIAQ4CXSh2DnyDfmCPEG2Iv9F9MPlM/LHyAecdyMzHYNwR3fdNK/OH9HXl1UCozD24TCvILxizEDWIEzA0FcM8woCgRrJCoS5PIwrANQSMAJX1LEI9bqpQo4JYNFFKRSvIgsxHDVnqZgIkPnNBM0rIGtYk9YOOsqgbgepRCfdbmFtqhFkVEDVPjJp0+Z6e6hRHhqBKgg6ZDCvYBygVmUoEGoh5JTRvIJwhJo1aUOoh4CLPMyvxxi7EWOMgnCGsXXI1GIXlZUYX7ucU+kbR8NW8lh3O7cue0Pk32MKndfUxQFAwxdirk3fHappAnc0oqDPzDfGTBrCfHP04dM4oTV8cxr0SVzH9FF07xD3ib6xCDE+M+aUcVygtWzzbtGX2rPBrEUYfecfQkaFzYi6HjVnGBdtL7epqAlc1+jRdAap74RrnPc4BCijttY2tRcdN0g17w7HqZrXhdJTYAuS3hd8z+vKgK3V1zWPae0mZDMykadBn1hTQBLnZNwVrJpSe/NwEeDsEwCctEOsJTsgxLvCqUl2ACftEGvJDgjxrnBqkh3ASTvEWrIDQrwrnJpkB3DSDrGW7IAQ7wqnJtkBnLRztejXXVu4+mxz/nQ9jR1w5VB86ejLTFcnDwhzV+F6T+CHZlx6THSjn76eyyBIOPHyDakhBAQAkJACAgBICAEhIAQYCLwC8JxpAmsEGt6AAAAAElFTkSuQmCC') no-repeat;
+        background-size: 22px;
+        width: 22px;
+        height: 22px;
+        float: left;
+        margin-left: -22px;
+      }
+
+      &.desc:before {
+        transform: rotate(180deg);
+        -ms-transform: rotate(180deg);
+      }
+    }
+  }
+
+  .mat-row, .mat-footer-row {
+    height: 48px;
+    transition: background-color 0.2s ease;
+
+    &:nth-child(even) {
+      background-color: #fafafa;
+    }
+
+    &:hover {
+      background-color: #f5f5f5;
+    }
+  }
+
+  .mat-cell {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0 12px;
+    text-align: left;
+    vertical-align: middle;
+    font-size: 14px;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .mat-no-data-row {
+    td {
+      padding: 24px;
+      text-align: center;
+      color: #666;
+      font-style: italic;
+    }
+  }
+}
+
+// .mat-column-cardHolderNumber,
+// .mat-column-customerId,
+// .mat-column-acctNo,
+// .mat-column-customerName {
+//   min-width: 150px;
+//   max-width: 200px;
+// }
+
+// .mat-column-cardregUser,
+// .mat-column-cardregDate,
+// .mat-column-cardAuthrejUser,
+// .mat-column-cardAuthrejDate,
+// .mat-column-cardregStatus,
+// .mat-column-CVVGenUser,
+// .mat-column-CVVGenDate,
+// .mat-column-CVVAuthrejUser,
+// .mat-column-CVVAuthrejDate,
+// .mat-column-CVVGenStatus,
+// .mat-column-embGenUser,
+// .mat-column-embGenDate,
+// .mat-column-embAuthrejUser,
+// .mat-column-embAuthrejDate,
+// .mat-column-embGenStatus,
+// .mat-column-embFileDownUser,
+// .mat-column-embFileDownDate,
+// .mat-column-embFileDownStatus,
+// .mat-column-reccardUser,
+// .mat-column-reccardDate,
+// .mat-column-recAuthrejUser,
+// .mat-column-recAuthrejDate,
+// .mat-column-reccardStatus,
+// .mat-column-isscardUser,
+// .mat-column-isscardDate,
+// .mat-column-issAuthrejUser,
+// .mat-column-issAuthrejDate,
+// .mat-column-isscardStatus {
+//   min-width: 160px;
+//   max-width: 200px;
+// }
+
+
+
+.mat-column {
+  min-width: 120px;
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mat-column {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mat-paginator {
+  background-color: #f5f5f5;
+  border-top: 1px solid #e0e0e0;
+  border-radius: 0 0 4px 4px;
+
+  .mat-paginator-page-size,
+  .mat-paginator-range-actions {
+    margin: 0 8px;
+  }
+
+  .mat-paginator-page-size-label {
+    margin-right: 8px;
+  }
+}
+
+.mat-tooltip {
+  font-size: 12px;
+  max-width: 300px;
+  white-space: normal;
+}
+
+@media (max-width: 1200px) {
+  .mat-table {
+    .mat-header-cell,
+    .mat-cell {
+      font-size: 12px;
+      padding: 0 8px;
+    }
+  }
+
+  .mat-column-cardHolderNumber,
+  .mat-column-customerId,
+  .mat-column-acctNo,
+  .mat-column-customerName,
+  .mat-column-cardregUser,
+  .mat-column-cardregDate,
+  .mat-column-cardAuthrejUser,
+  .mat-column-cardAuthrejDate,
+  .mat-column-cardregStatus,
+  .mat-column-CVVGenUser,
+  .mat-column-CVVGenDate,
+  .mat-column-CVVAuthrejUser,
+  .mat-column-CVVAuthrejDate,
+  .mat-column-CVVGenStatus,
+  .mat-column-embGenUser,
+  .mat-column-embGenDate,
+  .mat-column-embAuthrejUser,
+  .mat-column-embAuthrejDate,
+  .mat-column-embGenStatus,
+  .mat-column-embFileDownUser,
+  .mat-column-embFileDownDate,
+  .mat-column-embFileDownStatus,
+  .mat-column-reccardUser,
+  .mat-column-reccardDate,
+  .mat-column-recAuthrejUser,
+  .mat-column-recAuthrejDate,
+  .mat-column-reccardStatus,
+  .mat-column-isscardUser,
+  .mat-column-isscardDate,
+  .mat-column-issAuthrejUser,
+  .mat-column-issAuthrejDate,
+  .mat-column-isscardStatus {
+    min-width: 120px;
+  }
+}
+
+@media (max-width: 768px) {
+  .table-container {
+    max-height: 60vh;
+  }
+  
+  .mat-table {
+    min-width: 1200px; 
+  }
+}
+
+
+.status-green {
+  color: #155724;
+  background-color: #d4edda;
+  font-weight: bold;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 14px;
+  display: inline-block;
+  box-shadow: 0 0 4px rgba(0, 128, 0, 0.3);
+}
+
+.status-orange {
+  color: #856404;
+  background-color: #fff3cd;
+  font-weight: bold;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 14px;
+  display: inline-block;
+  box-shadow: 0 0 4px rgba(255, 165, 0, 0.3);
+}
+
+.status-red {
+  color: red;
+  background-color: #ffe5e5; /* light red */
+  font-weight: bold;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 14px;
+  display: inline-block;
+  box-shadow: 0 0 4px rgba(255, 0, 0, 0.3); /* match red */
+}

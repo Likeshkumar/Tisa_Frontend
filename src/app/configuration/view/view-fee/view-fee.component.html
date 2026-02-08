@@ -1,0 +1,665 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-custom-red">
+                        <div class="row">
+                            <div class="col-sm-9">
+                                <h4 class="card-title">Fee Configuration</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body" *ngIf="mode==='L'">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <mat-form-field class="full-width">
+                                    <mat-label>Search</mat-label>
+                                    <input matInput (keyup)="applyFilter($event)" placeholder="Ex Username" #input>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="col-md-12 mat-elevation-z12" *ngIf="showrecords">
+                            <div class="example-container">
+                                <table mat-table [dataSource]="dataSource">
+
+                                    <ng-container matColumnDef="sno">
+                                        <th mat-header-cell *matHeaderCellDef>Sl No</th>
+                                        <td mat-cell *matCellDef="let row;let i = index"> {{i+1}} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="productCode">
+                                        <th mat-header-cell *matHeaderCellDef>Bin</th>
+                                        <td mat-cell *matCellDef="let element"> {{element.productCode}} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="feecode">
+                                        <th mat-header-cell *matHeaderCellDef>Fee Code</th>
+                                        <td mat-cell *matCellDef="let element"> {{element.schemeCode}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="feedesc">
+                                        <th mat-header-cell *matHeaderCellDef> Fee Description </th>
+                                        <td mat-cell *matCellDef="let element"> {{element.schemeDescription}}
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="action">
+                                        <th mat-header-cell *matHeaderCellDef>Action</th>
+                                        <td mat-cell *matCellDef="let element"> <button mat-icon-button
+                                                aria-label="View" color="primary" matTooltip='View'
+                                                (click)="onRowClick(element,'V')"><mat-icon>visibility</mat-icon></button>
+                                            <!-- <button mat-icon-button aria-label="Edit" color="text-secondary"
+                                                matTooltip='Edit' matTooltipClass="example-tooltip-red"
+                                                (click)="onRowClick(element,'E')"><mat-icon>edit_note</mat-icon></button>
+                                            <button mat-icon-button aria-label="Delete" color="accent"
+                                                matTooltip='Delete' matTooltipClass="example-tooltip-red"
+                                                (click)="deleteFee(element)"><mat-icon>delete</mat-icon></button> -->
+                                        </td>
+                                    </ng-container>
+
+                                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                                    <tr class="mat-row" *matNoDataRow>
+                                        <td class="mat-cell" colspan="9">No Records Found !!!!
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <mat-paginator [pageSizeOptions]="[5,10,15,20,50]" #paginatorRef showFirstLastButtons
+                                aria-label="Select page of periodic elements">
+                            </mat-paginator>
+                        </div>
+
+                    </div>
+
+                    <div class="card-body" style="margin-top: 20px;margin-bottom: 50px;" *ngIf="mode!='L'">
+                        <form [formGroup]="feeForm">
+                            <div class="row">
+                                <div class="three-columns-grid">
+                                    <mat-form-field class="example-full-width">
+                                        <mat-label>Product</mat-label>
+                                        <mat-select formControlName="productCode" (selectionChange)="gettypeofCard()"
+                                            [disabled]="mode == 'V' || mode == 'E'">
+                                            <mat-option *ngFor="let product of productlist"
+                                                [value]="product.productCode">
+                                                {{ product.productCode }} - {{ product.productDesc }}
+                                            </mat-option>
+                                            <mat-option *ngIf="productlist?.length === 0">No Records Found</mat-option>
+                                        </mat-select>
+                                        <mat-error
+                                            *ngIf="feeForm.controls['productCode'].hasError('required') && feeForm.controls['productCode'].touched">
+                                            Product is required.
+                                        </mat-error>
+                                    </mat-form-field>
+
+                                    <mat-form-field class="example-full-width">
+                                        <mat-label>Type of Card</mat-label>
+                                        <mat-select formControlName="typeofCard"
+                                            [disabled]="mode == 'V' || mode == 'E'">
+                                            <mat-option *ngFor="let cardType of cardtypeList"
+                                                [value]="cardType.typeofCard">
+                                                {{ cardType.typeofCard }} - {{ cardType.description }}
+                                            </mat-option>
+                                            <mat-option *ngIf="cardtypeList?.length === 0">No Records Found</mat-option>
+                                        </mat-select>
+                                        <mat-error
+                                            *ngIf="feeForm.controls['typeofCard'].hasError('required') && feeForm.controls['typeofCard'].touched">
+                                            Type of Card is required.
+                                        </mat-error>
+                                    </mat-form-field>
+
+                                    <mat-form-field class="example-full-width">
+                                        <mat-label>Account Sub Type</mat-label>
+                                        <mat-select formControlName="acctSubType" [disabled]="mode=='V' || mode=='E'">
+                                            <mat-option *ngFor="let acctSub of acctSubTypeList"
+                                                [value]="acctSub.acctSubTypeCode">
+                                                {{ acctSub.acctSubTypeCode }} - {{ acctSub.acctSubTypeDesc }}
+                                            </mat-option>
+                                            <mat-option *ngIf="acctSubTypeList?.length === 0">No Records
+                                                Found</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+
+                                    <mat-form-field class="example-full-width">
+                                        <mat-label>Active Scheme Flag</mat-label>
+                                        <mat-select formControlName="schemeFlag" [disabled]="mode=='V'">
+                                            <mat-option value="Yes">Yes</mat-option>
+                                            <mat-option value="No">No</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <mat-form-field class="example-full-width">
+                                        <mat-label>Fee Code</mat-label>
+                                        <input matInput formControlName="schemeCode" placeholder="Scheme Code"
+                                            [readonly]="mode=='V' || mode=='E'" maxlength="3">
+                                        <mat-error *ngIf="feeForm.controls['schemeCode'].hasError('maxlength')">
+                                            Fee Code cannot exceed 4 digit.
+                                        </mat-error>
+                                        <mat-error *ngIf="feeForm.controls['schemeCode'].hasError('minlength')">
+                                            Fee Code Min 4 digit.
+                                        </mat-error>
+                                        <mat-error *ngIf="feeForm.controls['schemeCode'].hasError('pattern')">
+                                            Fee Code must contain only numbers.
+                                        </mat-error>
+                                    </mat-form-field>
+
+
+                                    <mat-form-field class="example-full-width">
+                                        <mat-label>Fee Description</mat-label>
+                                        <input matInput formControlName="schemeDescription"
+                                            placeholder="Scheme Description" maxlength="25" [readonly]="mode=='V'">
+                                        <mat-error *ngIf="feeForm.controls['schemeDescription'].hasError('maxlength')">
+                                            Fee Description cannot exceed 25 characters.
+                                        </mat-error>
+                                        <mat-error *ngIf="feeForm.controls['schemeDescription'].hasError('pattern')">
+                                            Only alphabets are allowed.
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <br>
+                            </div>
+                            <div class="roww">Configure all the card related fee details.</div>
+                            <div><br></div>
+                            <div class="six-columns-grid">
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>New Card Fee</mat-label>
+                                    <input matInput formControlName="newcardfee" placeholder="Enter New Card Fee"
+                                        [readonly]="mode=='V'" maxlength="5">
+                                    <mat-error *ngIf="feeForm.controls['newcardfee'].hasError('maxlength')">
+                                        New Card Fee cannot exceed 5 characters.
+                                    </mat-error>
+                                    <mat-error *ngIf="feeForm.controls['newcardfee'].hasError('pattern')">
+                                        New Card Fee must contain only numbers.
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>New Card Tax</mat-label>
+                                    <input matInput formControlName="newcardtax" placeholder="Enter New Tax Fee"
+                                        [readonly]="mode=='V'" maxlength="4">
+                                    <mat-error *ngIf="feeForm.controls['newcardtax'].hasError('maxlength')">
+                                        New Card Tax cannot exceed 4 characters.
+                                    </mat-error>
+                                    <mat-error *ngIf="feeForm.controls['newcardtax'].hasError('pattern')">
+                                        New Card Tax must contain only numbers.
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>New Card CBS TXN Code</mat-label>
+                                    <input matInput formControlName="newtxncode" placeholder="Enter TXN Code"
+                                        [readonly]="mode=='V'" maxlength="3">
+                                    <mat-error *ngIf="feeForm.controls['newtxncode'].hasError('maxlength')">
+                                        New TXN Code cannot exceed 3 characters.
+                                    </mat-error>
+                                    <mat-error *ngIf="feeForm.controls['newtxncode'].hasError('pattern')">
+                                        Only alphabets are allowed.
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>Select Periodicity</mat-label>
+                                    <mat-select formControlName="periodicity" [disabled]="mode=='V'">
+                                        <mat-option value="yearly">Yearly</mat-option>
+                                        <mat-option value="Once">Once</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>Replacement Card Fee</mat-label>
+                                    <input matInput formControlName="replacementcardfee"
+                                        placeholder="Enter Replacement Card Fee" [readonly]="mode=='V'" maxlength="5">
+                                    <mat-error *ngIf="feeForm.controls['replacementcardfee'].hasError('maxlength')">
+                                        New Card Fee cannot exceed 5 characters.
+                                    </mat-error>
+                                    <mat-error *ngIf="feeForm.controls['replacementcardfee'].hasError('pattern')">
+                                        New Card Fee must contain only numbers.
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>Replacement Card Tax</mat-label>
+                                    <input matInput formControlName="replacementcardtax"
+                                        placeholder="Enter Replacement Tax Fee" [readonly]="mode=='V'" maxlength="4">
+                                    <mat-error *ngIf="feeForm.controls['replacementcardtax'].hasError('maxlength')">
+                                        Replacement Card Tax cannot exceed 4 characters.
+                                    </mat-error>
+                                    <mat-error *ngIf="feeForm.controls['replacementcardtax'].hasError('pattern')">
+                                        Replacement Card Tax must contain only numbers.
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>Replacement CBS TXN Code</mat-label>
+                                    <input matInput formControlName="replacementtxncode" placeholder="Enter TXN Code"
+                                        [readonly]="mode=='V'" maxlength="3">
+                                    <mat-error *ngIf="feeForm.controls['replacementtxncode'].hasError('maxlength')">
+                                        Replacement TXN Code cannot exceed 3 characters.
+                                    </mat-error>
+                                    <mat-error *ngIf="feeForm.controls['replacementtxncode'].hasError('pattern')">
+                                        Only alphabets are allowed.
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>Select Periodicity</mat-label>
+                                    <mat-select formControlName="rep_periodicity" [disabled]="mode=='V'">
+                                        <mat-option value="yearly">Yearly</mat-option>
+                                        <mat-option value="Once">Once</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+
+
+
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>Renewal Card Fee</mat-label>
+                                    <input matInput formControlName="renewalcardfee"
+                                        placeholder="Enter Renewal Card Fee" maxlength="5" [readonly]="mode=='V'"
+                                        maxlength="5">
+                                    <mat-error *ngIf="feeForm.controls['renewalcardfee'].hasError('maxlength')">
+                                        Renewal Card Fee cannot exceed 5 characters.
+                                    </mat-error>
+                                    <mat-error *ngIf="feeForm.controls['renewalcardfee'].hasError('pattern')">
+                                        Renewal Card Fee must contain only numbers.
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>Renewal Card Tax</mat-label>
+                                    <input matInput formControlName="renewalcardtax" placeholder="Enter Renewal Tax Fee"
+                                        maxlength="4" [readonly]="mode=='V'">
+                                    <mat-error *ngIf="feeForm.controls['renewalcardtax'].hasError('maxlength')">
+                                        Renewal Card Tax cannot exceed 4 characters.
+                                    </mat-error>
+                                    <mat-error *ngIf="feeForm.controls['renewalcardtax'].hasError('pattern')">
+                                        Renewal Card Tax must contain only numbers.
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>Renewal CBS TXN Code</mat-label>
+                                    <input matInput formControlName="renewaltxncode" placeholder="Enter TXN Code"
+                                        maxlength="3" [readonly]="mode=='V'">
+                                    <mat-error *ngIf="feeForm.controls['renewaltxncode'].hasError('maxlength')">
+                                        Renewal TXN Code cannot exceed 3 characters.
+                                    </mat-error>
+                                    <mat-error *ngIf="feeForm.controls['renewaltxncode'].hasError('pattern')">
+                                        Only alphabets are allowed.
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>Select Periodicity</mat-label>
+                                    <mat-select formControlName="ren_periodicity" [disabled]="mode=='V'">
+                                        <mat-option value="yearly">Yearly</mat-option>
+                                        <mat-option value="Once">Once</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+
+
+
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>Re-PIN Fee</mat-label>
+                                    <input matInput formControlName="repincardfee" placeholder="Enter Re-PIN Fee"
+                                        maxlength="5" [readonly]="mode=='V'" maxlength="5">
+                                    <mat-error *ngIf="feeForm.controls['repincardfee'].hasError('maxlength')">
+                                        Re-PIN Card Fee cannot exceed 5 characters.
+                                    </mat-error>
+                                    <mat-error *ngIf="feeForm.controls['repincardfee'].hasError('pattern')">
+                                        Re-PIN Card Fee must contain only numbers.
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>Re-PIN Tax</mat-label>
+                                    <input matInput formControlName="repintax" placeholder="Enter Re-PIN Tax"
+                                        maxlength="4" [readonly]="mode=='V'">
+                                    <mat-error *ngIf="feeForm.controls['repintax'].hasError('maxlength')">
+                                        Re-PIN Card Tax cannot exceed 4 characters.
+                                    </mat-error>
+                                    <mat-error *ngIf="feeForm.controls['repintax'].hasError('pattern')">
+                                        Re-PIN Card Tax must contain only numbers.
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>Re-PIN TXN Code</mat-label>
+                                    <input matInput formControlName="repintxncode" placeholder="Enter TXN Code"
+                                        maxlength="3" [readonly]="mode=='V'">
+                                    <mat-error *ngIf="feeForm.controls['repintxncode'].hasError('maxlength')">
+                                        Re-PIN TXN Code cannot exceed 5 characters.
+                                    </mat-error>
+                                    <mat-error *ngIf="feeForm.controls['repintxncode'].hasError('pattern')">
+                                        Only alphabets are allowed.
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>Select Periodicity</mat-label>
+                                    <mat-select formControlName="repin_periodicity" [disabled]="mode=='V'">
+                                        <mat-option value="yearly">Yearly</mat-option>
+                                        <mat-option value="Once">Once</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>Card-Block Fee</mat-label>
+                                    <input matInput formControlName="cardblockfee" placeholder="Enter Card-Block Fee"
+                                        maxlength="5" [readonly]="mode=='V'" maxlength="5">
+                                    <mat-error *ngIf="feeForm.controls['cardblockfee'].hasError('maxlength')">
+                                        Card-Block Card Fee cannot exceed 5 characters.
+                                    </mat-error>
+                                    <mat-error *ngIf="feeForm.controls['cardblockfee'].hasError('pattern')">
+                                        Card-Block Card Fee must contain only numbers.
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>Card-Block Card Tax</mat-label>
+                                    <input matInput formControlName="cardblocktax" placeholder="Enter Card-Block Tax"
+                                        maxlength="4" [readonly]="mode=='V'">
+                                    <mat-error *ngIf="feeForm.controls['cardblocktax'].hasError('maxlength')">
+                                        Card-Block Card Tax cannot exceed 4 characters.
+                                    </mat-error>
+                                    <mat-error *ngIf="feeForm.controls['cardblocktax'].hasError('pattern')">
+                                        Card-Block Card Tax must contain only numbers.
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>Card-Block CBS TXN Code</mat-label>
+                                    <input matInput formControlName="cardblocktxncode" placeholder="Enter TXN Code"
+                                        maxlength="3" [readonly]="mode=='V'">
+                                    <mat-error *ngIf="feeForm.controls['cardblocktxncode'].hasError('maxlength')">
+                                        Card-Block TXN Code cannot exceed 3 characters.
+                                    </mat-error>
+                                    <mat-error *ngIf="feeForm.controls['cardblocktxncode'].hasError('pattern')">
+                                        Only alphabets are allowed.
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>Select Periodicity</mat-label>
+                                    <mat-select formControlName="cardblock_periodicity" [disabled]="mode=='V'">
+                                        <mat-option value="yearly">Yearly</mat-option>
+                                        <mat-option value="Once">Once</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>Card-UnBlock Fee</mat-label>
+                                    <input matInput formControlName="cardunblockfee"
+                                        placeholder="Enter Card-UnBlock Fee" maxlength="5" [readonly]="mode=='V'"
+                                        maxlength="5">
+                                    <mat-error *ngIf="feeForm.controls['cardblockfee'].hasError('maxlength')">
+                                        Card-UnBlock Card Fee cannot exceed 5 characters.
+                                    </mat-error>
+                                    <mat-error *ngIf="feeForm.controls['cardblockfee'].hasError('pattern')">
+                                        Card-UnBlock Card Fee must contain only numbers.
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>Card-UnBlock Card Tax</mat-label>
+                                    <input matInput formControlName="cardunblocktax"
+                                        placeholder="Enter Card-UnBlock Tax" maxlength="4" [readonly]="mode=='V'">
+                                    <mat-error *ngIf="feeForm.controls['cardunblocktax'].hasError('maxlength')">
+                                        Card-UnBlock Card Tax cannot exceed 4 characters.
+                                    </mat-error>
+                                    <mat-error *ngIf="feeForm.controls['cardunblocktax'].hasError('pattern')">
+                                        Card-UnBlock Card Tax must contain only numbers.
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>Card-UnBlock CBS TXN Code</mat-label>
+                                    <input matInput formControlName="cardunblocktxncode" placeholder="Enter TXN Code"
+                                        maxlength="3" [readonly]="mode=='V'">
+                                    <mat-error *ngIf="feeForm.controls['cardunblocktxncode'].hasError('maxlength')">
+                                        Card-UnBlock TXN Code cannot exceed 5 characters.
+                                    </mat-error>
+                                    <mat-error *ngIf="feeForm.controls['cardunblocktxncode'].hasError('pattern')">
+                                        Only alphabets are allowed.
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>Select Periodicity</mat-label>
+                                    <mat-select formControlName="cardunblock_periodicity" [disabled]="mode=='V'">
+                                        <mat-option value="yearly">Yearly</mat-option>
+                                        <mat-option value="Once">Once</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+
+
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>Sec Account Fee</mat-label>
+                                    <input matInput formControlName="secaccountfee" placeholder="Enter Account Link Fee"
+                                        maxlength="5" [readonly]="mode=='V'" maxlength="5">
+                                    <mat-error *ngIf="feeForm.controls['secaccountfee'].hasError('maxlength')">
+                                        Sec Account Card Fee cannot exceed 5 characters.
+                                    </mat-error>
+                                    <mat-error *ngIf="feeForm.controls['secaccountfee'].hasError('pattern')">
+                                        Sec Account Card Fee must contain only numbers.
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>Sec Account Tax</mat-label>
+                                    <input matInput formControlName="secaccounttax" placeholder="Enter Account Link Tax"
+                                        maxlength="4" [readonly]="mode=='V'">
+                                    <mat-error *ngIf="feeForm.controls['secaccounttax'].hasError('maxlength')">
+                                        Sec Account Tax cannot exceed 4 characters.
+                                    </mat-error>
+                                    <mat-error *ngIf="feeForm.controls['secaccounttax'].hasError('pattern')">
+                                        Sec Account Tax must contain only numbers.
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>Sec Account CBS TXN Code</mat-label>
+                                    <input matInput formControlName="secaccounttxncode" placeholder="Enter TXN Code"
+                                        maxlength="3" [readonly]="mode=='V'">
+                                    <mat-error *ngIf="feeForm.controls['secaccounttxncode'].hasError('maxlength')">
+                                        Sec Account TXN Code cannot exceed 3 characters.
+                                    </mat-error>
+                                    <mat-error *ngIf="feeForm.controls['secaccounttxncode'].hasError('pattern')">
+                                        Only alphabets are allowed..
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>Select Periodicity</mat-label>
+                                    <mat-select formControlName="secacc_periodicity" [disabled]="mode=='V'">
+                                        <mat-option value="yearly">Yearly</mat-option>
+                                        <mat-option value="Once">Once</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>Card-Destruction Fee</mat-label>
+                                    <input matInput formControlName="carddesfee"
+                                        placeholder="Enter Card-Destruction Fee" maxlength="5" [readonly]="mode=='V'"
+                                        maxlength="5">
+                                    <mat-error *ngIf="feeForm.controls['carddesfee'].hasError('maxlength')">
+                                        Card-Destruction Fee cannot exceed 5 characters.
+                                    </mat-error>
+                                    <mat-error *ngIf="feeForm.controls['carddesfee'].hasError('pattern')">
+                                        Card-Destruction Fee must contain only numbers.
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>Card-Destruction Tax</mat-label>
+                                    <input matInput formControlName="carddestax"
+                                        placeholder="Enter Card-Destruction Tax" maxlength="4" [readonly]="mode=='V'">
+                                    <mat-error *ngIf="feeForm.controls['carddestax'].hasError('maxlength')">
+                                        Card-Destruction Card Tax cannot exceed 4 characters.
+                                    </mat-error>
+                                    <mat-error *ngIf="feeForm.controls['carddestax'].hasError('pattern')">
+                                        Card-Destruction Card Tax must contain only numbers.
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>Card-Destruction TXN Code</mat-label>
+                                    <input matInput formControlName="carddestxncode" placeholder="Enter TXN Code"
+                                        maxlength="3" [readonly]="mode=='V'">
+                                    <mat-error *ngIf="feeForm.controls['carddestxncode'].hasError('maxlength')">
+                                        Card-Destruction TXN Code cannot exceed 3 characters.
+                                    </mat-error>
+                                    <mat-error *ngIf="feeForm.controls['carddestxncode'].hasError('pattern')">
+                                        Only alphabets are allowed.
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>Select Periodicity</mat-label>
+                                    <mat-select formControlName="close_periodicity" [disabled]="mode=='V'">
+                                        <mat-option value="yearly">Yearly</mat-option>
+                                        <mat-option value="Once">Once</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>Reset PIN retry Fee</mat-label>
+                                    <input matInput formControlName="resetpinfee"
+                                        placeholder="Enter Reset PIN retry Fee" maxlength="5" [readonly]="mode=='V'"
+                                        maxlength="5">
+                                    <mat-error *ngIf="feeForm.controls['resetpinfee'].hasError('maxlength')">
+                                        Reset PIN retry Card Fee cannot exceed 5 characters.
+                                    </mat-error>
+                                    <mat-error *ngIf="feeForm.controls['resetpinfee'].hasError('pattern')">
+                                        Reset PIN retry Card Fee must contain only numbers.
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>Reset PIN retry Tax</mat-label>
+                                    <input matInput formControlName="resetpintax"
+                                        placeholder="Enter Reset PIN retry Tax" maxlength="4" [readonly]="mode=='V'">
+                                    <mat-error *ngIf="feeForm.controls['resetpintax'].hasError('maxlength')">
+                                        Reset PIN retry Card Tax cannot exceed 4 characters.
+                                    </mat-error>
+                                    <mat-error *ngIf="feeForm.controls['resetpintax'].hasError('pattern')">
+                                        Reset PIN retry Card Tax must contain only numbers.
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>Reset PIN retry CBS TXN Code</mat-label>
+                                    <input matInput formControlName="resetpintxncode" placeholder="Enter TXN Code"
+                                        maxlength="3" [readonly]="mode=='V'">
+                                    <mat-error *ngIf="feeForm.controls['resetpintxncode'].hasError('maxlength')">
+                                        Reset PIN retry TXN Code cannot exceed 3 characters.
+                                    </mat-error>
+                                    <mat-error *ngIf="feeForm.controls['resetpintxncode'].hasError('pattern')">
+                                        Only alphabets are allowed.
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>Select Periodicity</mat-label>
+                                    <mat-select formControlName="resetpin_periodicity" [disabled]="mode=='V'">
+                                        <mat-option value="yearly">Yearly</mat-option>
+                                        <mat-option value="Once">Once</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>Card-Permanent-Block Fee</mat-label>
+                                    <input matInput formControlName="cardpemblockfee"
+                                        placeholder="Enter Card-Permanent-Block Fee" maxlength="5"
+                                        [readonly]="mode=='V'">
+                                    <mat-error *ngIf="feeForm.controls['cardpemblockfee'].hasError('maxlength')">
+                                        Card-Permanent-Block Fee cannot exceed 5 characters.
+                                    </mat-error>
+                                    <mat-error *ngIf="feeForm.controls['cardpemblockfee'].hasError('pattern')">
+                                        Card-Permanent-Block Fee must contain only numbers.
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>Card-Permanent-Block Tax</mat-label>
+                                    <input matInput formControlName="cardpemblocktax"
+                                        placeholder="Enter Card-Permanent-Block Tax" maxlength="4"
+                                        [readonly]="mode=='V'">
+                                    <mat-error *ngIf="feeForm.controls['cardpemblocktax'].hasError('maxlength')">
+                                        Card-Permanent-Block Tax cannot exceed 4 characters.
+                                    </mat-error>
+                                    <mat-error *ngIf="feeForm.controls['cardpemblocktax'].hasError('pattern')">
+                                        Card-Permanent-Block Tax must contain only numbers.
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>Card-Permanent-Block CBS TXN Code</mat-label>
+                                    <input matInput formControlName="cardpemblocktxncode" placeholder="Enter TXN Code"
+                                        maxlength="3" [readonly]="mode=='V'">
+                                    <mat-error *ngIf="feeForm.controls['cardpemblocktxncode'].hasError('maxlength')">
+                                        TXN Code cannot exceed 3 characters.
+                                    </mat-error>
+                                    <mat-error *ngIf="feeForm.controls['cardpemblocktxncode'].hasError('pattern')">
+                                        Only alphabets are allowed.
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>Select Periodicity</mat-label>
+                                    <mat-select formControlName="cardpemblock_periodicity" [disabled]="mode=='V'">
+                                        <mat-option value="yearly">Yearly</mat-option>
+                                        <mat-option value="Once">Once</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+
+                                <!-- <mat-form-field class="example-full-width">
+                                        <mat-label>Damage</mat-label> 
+                                        <input matInput formControlName="damage" placeholder="Damage Fee" maxlength="5"
+                                            [readonly]="mode=='V'">
+                                        <mat-error *ngIf="feeForm.controls['damage'].hasError('maxlength')">
+                                            Damage Fee cannot exceed 5 characters.
+                                        </mat-error>
+                                        <mat-error *ngIf="feeForm.controls['damage'].hasError('pattern')">
+                                            Damage Fee must contain only numbers.
+                                        </mat-error>
+                                    </mat-form-field>
+
+                                    <mat-form-field class="example-full-width">
+                                        <mat-label>New Card</mat-label>
+                                        <input matInput formControlName="newCard" placeholder="New Card Fee" maxlength="4"
+                                            [readonly]="mode=='V'">
+                                        <mat-error *ngIf="feeForm.controls['newCard'].hasError('maxlength')">
+                                            New Card Fee cannot exceed 5 characters.
+                                        </mat-error>
+                                        <mat-error *ngIf="feeForm.controls['newCard'].hasError('pattern')">
+                                            New Card Fee must contain only numbers.
+                                        </mat-error>
+                                    </mat-form-field>-->
+                            </div>
+                        </form>
+                        <div class="d-flex justify-content-center">
+
+                            <button mat-stroked-button mat-dialog-close color="warn" style="margin-right: 20px;"
+                                (click)="clear()" *ngIf="mode==='A'">
+                                <mat-icon>refresh</mat-icon> Reset
+                            </button>
+
+                            <button mat-stroked-button mat-dialog-close color="primary" style="margin-right: 20px;"
+                                (click)="backList()">
+                                <mat-icon>arrow_back</mat-icon> Back
+                            </button>
+
+                            <button type="submit" mat-raised-button [color]="mode === 'E' ? 'accent' : 'primary'"
+                                class="md-btn" [disabled]="feeForm.invalid" (click)="addFeeList()"
+                                *ngIf="mode==='A' || mode==='E' || mode==='C'">
+                                <mat-icon>{{ mode === 'E' ? 'edit' : 'check_circle' }}</mat-icon>&nbsp;
+                                {{ mode === 'E' ? 'Update' : 'Submit' }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

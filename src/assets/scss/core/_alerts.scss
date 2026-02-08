@@ -1,0 +1,256 @@
+.alert {
+    border: 0;
+    border-radius: 3px;
+    position: relative;
+    padding: 20px 15px;
+    line-height: 20px;
+
+    b {
+        font-weight: $font-weight-bold;
+        text-transform: uppercase;
+        font-size: $font-size-small;
+    }
+
+    @include alert-variations(unquote(".alert"), unquote(""), $mdb-text-color-light);
+
+    &-info,
+    &-danger,
+    &-warning,
+    &-success,
+    &-rose {
+        color: $mdb-text-color-light;
+    }
+
+    &-default {
+
+        a,
+        .alert-link {
+            color: $mdb-text-color-primary;
+        }
+    }
+
+    span {
+        display: block;
+        max-width: 89%;
+    }
+
+    &.alert-danger {
+        @include shadow-alert-color($brand-danger);
+        @include alert-icon-color($brand-danger);
+    }
+
+    &.alert-warning {
+        @include shadow-alert-color($brand-warning);
+        @include alert-icon-color($brand-warning);
+    }
+
+    &.alert-success {
+        @include shadow-alert-color($brand-success);
+        @include alert-icon-color($brand-success);
+    }
+
+    &.alert-info {
+        @include shadow-alert-color($brand-info);
+        @include alert-icon-color($brand-info);
+    }
+
+    &.alert-primary {
+        @include shadow-alert-color($brand-primary);
+        @include alert-icon-color($brand-primary);
+    }
+
+    &.alert-rose {
+        @include shadow-alert-color($brand-rose);
+        @include alert-icon-color($brand-rose);
+    }
+
+    &.alert-with-icon {
+        padding-left: 66px;
+
+        i[data-notify="icon"] {
+            font-size: 30px;
+            display: block;
+            left: 15px;
+            position: absolute;
+            top: 50%;
+            margin-top: -15px;
+            color: #fff;
+        }
+    }
+
+    .mat-button.close {
+        min-width: auto;
+        line-height: .5;
+
+        i {
+            color: $white-color;
+            font-size: 11px;
+        }
+    }
+
+    i[data-notify="icon"] {
+        display: none;
+    }
+
+    .alert-icon {
+        display: block;
+        float: left;
+        margin-right: $margin-base;
+
+        i {
+            margin-top: -7px;
+            top: 5px;
+            position: relative;
+        }
+    }
+
+    [data-notify="dismiss"] {
+        margin-right: 5px;
+    }
+}
+
+.places-buttons .btn {
+    margin-bottom: 30px;
+}
+
+//------------------------------------------
+
+
+// .swal-popup-success {
+//     background-color: #d4edda;
+//     color: #155724;
+//     border: 3px solid #c3e6cb;
+//     border-radius: 10px;
+//     padding: 25px;
+//     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+// }
+
+// .swal-popup-error {
+//     background-color: #f8d7da;
+//     color: #721c24;
+//     border: 3px solid #f5c6cb;
+//     border-radius: 10px;
+//     padding: 25px;
+//     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+// }
+
+// .swal-popup-info {
+//     background-color: #cce5ff;
+//     color: #004085;
+//     border: 3px solid #b8daff;
+//     border-radius: 10px;
+//     padding: 25px;
+//     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+// }
+
+
+// .swal-title {
+//     font-size: 1.8em;
+//     font-weight: bold;
+//     text-align: center;
+//     margin-bottom: 15px;
+//     color: inherit;
+// }
+
+
+// .swal-content {
+//     font-size: 1.2em;
+//     text-align: center;
+//     color: inherit;
+// }
+
+
+// .swal-confirm-btn {
+//     background-color: #28a745;
+//     color: white;
+//     font-size: 1.1em;
+//     padding: 12px 24px;
+//     border-radius: 8px;
+//     border: none;
+//     transition: background-color 0.3s;
+// }
+
+// .swal-confirm-btn:hover {
+//     background-color: #218838;
+// }
+
+
+// .swal-popup-success i {
+//     font-size: 2em;
+//     color: #155724;
+// }
+
+// .swal-popup-error i {
+//     font-size: 2em;
+//     color: #721c24;
+// }
+
+// .swal-popup-info i {
+//     font-size: 2em;
+//     color: #004085;
+// }
+
+
+// .animate__zoomIn {
+//     animation: zoomIn 0.5s ease-in-out;
+// }
+
+// .animate__zoomOut {
+//     animation: zoomOut 0.5s ease-in-out;
+// }
+
+// @keyframes zoomIn {
+//     0% {
+//         transform: scale(0.7);
+//         opacity: 0;
+//     }
+
+//     100% {
+//         transform: scale(1);
+//         opacity: 1;
+//     }
+// }
+
+// @keyframes zoomOut {
+//     0% {
+//         transform: scale(1);
+//         opacity: 1;
+//     }
+
+//     100% {
+//         transform: scale(0.7);
+//         opacity: 0;
+//     }
+// }
+
+// .animate__fadeInUp {
+//     animation: fadeInUp 0.6s ease-in-out;
+// }
+
+// .animate__fadeOutDown {
+//     animation: fadeOutDown 0.6s ease-in-out;
+// }
+
+// @keyframes fadeInUp {
+//     0% {
+//         opacity: 0;
+//         transform: translateY(50px);
+//     }
+
+//     100% {
+//         opacity: 1;
+//         transform: translateY(0);
+//     }
+// }
+
+// @keyframes fadeOutDown {
+//     0% {
+//         opacity: 1;
+//         transform: translateY(0);
+//     }
+
+//     100% {
+//         opacity: 0;
+//         transform: translateY(50px);
+//     }
+// }

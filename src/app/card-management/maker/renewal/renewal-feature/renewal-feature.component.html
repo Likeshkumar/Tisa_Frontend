@@ -1,0 +1,254 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-custom-red">
+                        <h4 class="card-title">Card Renewal Management</h4>
+                    </div>
+
+                    <div class="card-body mt-3">
+                        <form [formGroup]="renewalForm">
+                            <div class="row mb-1">
+                                <div class="col-md-12">
+                                    <label class="font-weight-bold">Card Renewal Eligibility Marking</label>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-12 d-flex gap-4">
+                                    <mat-radio-group formControlName="selectedMode" (change)="onModeChange()">
+                                        <mat-radio-button value="single">Mark Single Record</mat-radio-button>
+                                        <mat-radio-button value="multiple" class="ms-4">Mark Multiple
+                                            Record</mat-radio-button>
+                                    </mat-radio-group>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3" *ngIf="renewalForm.get('selectedMode')?.value === 'single'">
+                                <div class="col-md-3 d-flex align-items-center">
+                                    <mat-radio-group formControlName="searchBy" (change)="onSearchByChange()"
+                                        class="d-flex flex-row gap-3">
+                                        <mat-radio-button value="customerId">Customer ID</mat-radio-button>
+                                        <mat-radio-button value="cardNumber" class="ms-3">Card Number</mat-radio-button>
+                                    </mat-radio-group>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <mat-form-field appearance="outline" class="w-100">
+                                        <mat-label>
+                                            Enter {{
+                                            renewalForm.get('searchBy')?.value === 'customerId' ? 'Customer ID' : 'Card
+                                            Number'
+                                            }}
+                                        </mat-label>
+                                        <input matInput formControlName="searchValue" maxlength="20"
+                                            [placeholder]="renewalForm.get('searchBy')?.value === 'customerId' ? '6-digit ID' : '16-digit card number'" />
+                                        <mat-error *ngIf="renewalForm.get('searchValue')?.hasError('required')">
+                                            This field is required
+                                        </mat-error>
+                                        <mat-error *ngIf="renewalForm.get('searchValue')?.hasError('pattern')">
+                                            {{
+                                            renewalForm.get('searchBy')?.value === 'customerId'
+                                            ? 'Only 6 digit numbers allowed'
+                                            : 'Only 16 digit numbers allowed'
+                                            }}
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <mat-form-field appearance="outline" class="w-100">
+                                        <mat-label>Renewal Eligibility</mat-label>
+                                        <mat-select formControlName="eligibility" (selectionChange)="change()">
+                                            <mat-option value="REQUIRED">Renewal Opted</mat-option>
+                                            <mat-option value="NOT_REQUIRED">Renewal Not Opted</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-md-3 d-flex align-items-end">
+                                    <button mat-raised-button color="primary" (click)="getFilterRecordList()"
+                                        [disabled]="!renewalForm.valid">
+                                        <mat-icon>view_list</mat-icon>&nbsp;Retrieve
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3" *ngIf="renewalForm.get('selectedMode')?.value === 'multiple'">
+                                <div class="col-md-3">
+                                    <mat-form-field appearance="outline" class="w-100">
+                                        <mat-label>Product</mat-label>
+                                        <mat-select formControlName="productObj">
+                                            <mat-option *ngFor="let product of productlist" [value]="product">
+                                                {{ product.productCode }} - {{ product.productDesc }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <mat-form-field appearance="outline" class="w-100">
+                                        <mat-label>Branch</mat-label>
+                                        <mat-select formControlName="branchObj">
+                                            <mat-option *ngFor="let branch of branchList" [value]="branch">
+                                                {{ branch.branchCode }} - {{ branch.branchName }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field appearance="outline" class="w-100">
+                                        <mat-label>Renewal Eligibility</mat-label>
+                                        <mat-select formControlName="eligibility" (selectionChange)="change()">
+                                            <mat-option value="REQUIRED">Renewal Opted</mat-option>
+                                            <mat-option value="NOT_REQUIRED">Renewal Not Opted</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Select Month & Year</mat-label>
+                                        <input matInput [matDatepicker]="monthPicker" [readonly]="true"
+                                            [value]="formatDate(selectDate)" (click)="monthPicker.open()"
+                                            [max]="today" />
+                                        <mat-datepicker-toggle matSuffix [for]="monthPicker"></mat-datepicker-toggle>
+                                        <mat-datepicker #monthPicker startView="multi-year"
+                                            (yearSelected)="setYear($event)"
+                                            (monthSelected)="setMonth($event, monthPicker)" panelClass="month-picker"
+                                            [startAt]="selectDate" [touchUi]="true"></mat-datepicker>
+                                        <mat-hint>{{ formatDate(selectDate) }}</mat-hint>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-md-2 d-flex align-items-end">
+                                    <button mat-raised-button color="primary" (click)="getFilterRecordList()"
+                                        [disabled]="!renewalForm.valid">
+                                        <mat-icon>view_list</mat-icon>&nbsp;Retrieve
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+
+                        <div class="row alignTable mt-4" *ngIf="showrecords">
+                            <div class="col-md-12 mat-elevation-z12">
+                                <table mat-table [dataSource]="dataSource" class="w-100">
+
+                                    <ng-container matColumnDef="select">
+                                        <th mat-header-cell *matHeaderCellDef><mat-checkbox
+                                                (change)="$event ? masterToggle($event) : null"
+                                                [checked]="selection.hasValue() && isEntirePageSelected()"
+                                                [indeterminate]="selection.hasValue() && !isEntirePageSelected()"
+                                                [aria-label]="checkboxLabel()"></mat-checkbox>
+                                        </th>
+                                        <td mat-cell *matCellDef="let row">
+                                            <mat-checkbox (click)="$event.stopPropagation()"
+                                                (change)="$event ? selection.toggle(row) : null"
+                                                [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+                                            </mat-checkbox>
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="productcode">
+                                        <th mat-header-cell *matHeaderCellDef>Product</th>
+                                        <td mat-cell *matCellDef="let element"> {{element.productcode}} -
+                                            {{element.productName}} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="branchcode">
+                                        <th mat-header-cell *matHeaderCellDef>Branch</th>
+                                        <td mat-cell *matCellDef="let element"> {{element.branchcode}} -
+                                            {{element.branchName}} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="chnMask">
+                                        <th mat-header-cell *matHeaderCellDef>Card Number</th>
+                                        <td mat-cell *matCellDef="let element"> {{element.chnMask}} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="acctno">
+                                        <th mat-header-cell *matHeaderCellDef>PAN</th>
+                                        <td mat-cell *matCellDef="let element"> {{element.acctno}} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="expDate">
+                                        <th mat-header-cell *matHeaderCellDef>Expiry</th>
+                                        <td mat-cell *matCellDef="let element"> {{element.expDate}} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="customerId">
+                                        <th mat-header-cell *matHeaderCellDef>Customer ID</th>
+                                        <td mat-cell *matCellDef="let element"> {{element.customerId}} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="embName">
+                                        <th mat-header-cell *matHeaderCellDef>Customer Name</th>
+                                        <td mat-cell *matCellDef="let element"> {{element.embName}} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="mobileNo">
+                                        <th mat-header-cell *matHeaderCellDef>Mobile Number</th>
+                                        <td mat-cell *matCellDef="let element"> {{element.mobileNo}} </td>
+                                    </ng-container>
+
+                                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                                    <tr class="mat-row" *matNoDataRow>
+                                        <td class="mat-cell" colspan="8">No Records Found !!!</td>
+                                    </tr>
+                                </table>
+
+                                <mat-paginator [pageSizeOptions]="[50,100,500]" showFirstLastButtons></mat-paginator>
+                            </div>
+                        </div>
+
+                        <!-- <div class="row mt-4" *ngIf="showrecords && dataSource.data.length > 0">
+                            <div class="col-sm-4">
+                                <h5><strong>Total No. of Cards: {{ dataSource.data.length }}</strong></h5>
+                            </div>
+                            <div class="col-sm-8 text-end">
+                                <button mat-raised-button color="primary" (click)="generateprefile('opted')">
+                                    <mat-icon>check_circle_outline</mat-icon>&nbsp;Renewal Opted
+                                </button>
+                                &nbsp;
+                                <button mat-raised-button color="warn" (click)="generateprefile('notOpted')">
+                                    <mat-icon>highlight_off</mat-icon>&nbsp;Renewal Not Opted
+                                </button>
+                                &nbsp;
+                                <button mat-raised-button color="accent" (click)="cancelcvvgenerate()">
+                                    <mat-icon>highlight_off</mat-icon>&nbsp;Canel
+                                </button>
+                            </div>
+                        </div> -->
+                        <div class="row mt-4" *ngIf="showrecords && dataSource.data.length > 0">
+                            <div class="col-sm-4">
+                                <h5><strong>Total No. of Cards: {{ dataSource.data.length }}</strong></h5>
+                            </div>
+                            <div class="col-sm-8 text-end">
+
+                                <!-- If user selected 'REQUIRED' i.e., Renewal Opted -->
+                                <ng-container *ngIf="renewalForm.get('eligibility')?.value === 'REQUIRED'">
+                                    <button mat-raised-button color="warn" (click)="generateprefile('notOpted')">
+                                        <mat-icon>highlight_off</mat-icon>&nbsp;Skip Renewal
+                                    </button>
+                                </ng-container>
+
+                                <!-- If user selected 'NOT_REQUIRED' i.e., Renewal Not Opted -->
+                                <ng-container *ngIf="renewalForm.get('eligibility')?.value === 'NOT_REQUIRED'">
+                                    <button mat-raised-button color="primary" (click)="generateprefile('opted')">
+                                        <mat-icon>check_circle_outline</mat-icon>&nbsp;Do Renew
+                                    </button>
+                                </ng-container>
+
+                                &nbsp;
+                                <button mat-raised-button color="accent" (click)="cancelcvvgenerate()">
+                                    <mat-icon>highlight_off</mat-icon>&nbsp;Cancel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

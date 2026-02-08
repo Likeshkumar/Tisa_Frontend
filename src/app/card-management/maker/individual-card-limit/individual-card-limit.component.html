@@ -1,0 +1,360 @@
+<!-- <div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-custom-red">
+                        <div class="row">
+                            <div class="col-sm-9">
+                                <h4 class="card-title">Individual Card Limit</h4>
+                            </div>
+                            <div class="col-sm-3"></div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <br>
+                        <div class="row">
+                            <div class="col-md-9">
+                                <mat-radio-group [(ngModel)]="selectedOption" (ngModelChange)="onSelectionChange()">
+                                    <mat-radio-button value="customerId" class="radio-spacing">Customer
+                                        ID</mat-radio-button>
+                                    <mat-radio-button value="cardNumber" class="radio-spacing">Card
+                                        Number</mat-radio-button>
+                                </mat-radio-group>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4" *ngIf="selectedOption">
+                                <mat-form-field appearance="fill">
+                                    <mat-label>{{ getLabelForSelection(selectedOption) }}</mat-label>
+                                    <input matInput [(ngModel)]="userInput"
+                                        [placeholder]="getPlaceholderForSelection(selectedOption)"
+                                        [minlength]="getMinLengthForSelection(selectedOption)"
+                                        [pattern]="getPatternForSelection(selectedOption)"
+                                        [maxlength]="getMaxLengthForSelection(selectedOption)" required
+                                        #inputModel="ngModel">
+                                    <mat-error *ngIf="inputModel.invalid && inputModel.touched">
+                                        {{ getErrorMessage(inputModel, selectedOption) }}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col-md-12 d-flex justify-content-end" *ngIf="selectedOption && userInput">
+                                <button mat-raised-button color="primary" style="margin-top: 20px;"
+                                    (click)="retrieveData()">
+                                    <mat-icon>view_list</mat-icon>&nbsp;Retrieve
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card" *ngIf="showrecords">
+                    <div class="col-md-12 mat-elevation-z12">
+                        <div class="example-container">
+                            <table mat-table [dataSource]="dataSource">
+                                <ng-container matColumnDef="chnMask">
+                                    <th mat-header-cell *matHeaderCellDef> CHN </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.chnMask}}</td>
+                                </ng-container>
+                                <ng-container matColumnDef="customerId">
+                                    <th mat-header-cell *matHeaderCellDef> Customer Id </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.customerId}}</td>
+                                </ng-container>
+                                <ng-container matColumnDef="primaryAccountnumber">
+                                    <th mat-header-cell *matHeaderCellDef> PAN </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.primaryAccountnumber}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="customerName">
+                                    <th mat-header-cell *matHeaderCellDef> Customer Name </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.customerName}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="mobNo">
+                                    <th mat-header-cell *matHeaderCellDef> Mobile </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.mobNo}} </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                                <tr class="mat-row" *matNoDataRow>
+                                    <td class="mat-cell" colspan="9">No Records Found !!!!
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" *ngIf="showrecords">
+                    <form [formGroup]="cardTypeFromGroup">
+                        <div><br></div>
+                        <div class="row1">                            
+                            <div class="col-sm-3">
+                                <mat-form-field appearance="outline" style="width: 100%;">
+                                    <mat-label>From Date</mat-label>
+                                    <input matInput [matDatepicker]="fromDatePicker" formControlName="fromDate"
+                                        [max]="today" readonlyInput />
+                                    <mat-hint>MM/DD/YYYY</mat-hint>
+                                    <mat-datepicker-toggle matSuffix [for]="fromDatePicker"></mat-datepicker-toggle>
+                                    <mat-datepicker #fromDatePicker></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+                            
+                            <div class="col-sm-3">
+                                <mat-form-field appearance="outline" style="width: 100%;">
+                                    <mat-label>To Date</mat-label>
+                                    <input matInput [matDatepicker]="toDatePicker" formControlName="toDate"
+                                        [min]="cardTypeFromGroup.get('fromDate')?.value" readonlyInput />
+                                    <mat-hint>MM/DD/YYYY</mat-hint>
+                                    <mat-datepicker-toggle matSuffix [for]="toDatePicker"></mat-datepicker-toggle>
+                                    <mat-datepicker #toDatePicker></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <br>
+                        <div class="row1">                            
+                            <div class="col-sm-3">
+                                <mat-form-field class="example-half-width">
+                                    <mat-label> Cumulative Max WDL Amt</mat-label>
+                                    <input matInput placeholder="Enter Amount" formControlName="cumMaxWdlAmt"
+                                        name="cumMaxWdlAmt" maxlength="7" [readonly]="mode=='V'">
+                                    <mat-error
+                                        *ngIf="cardTypeFromGroup.controls['cumMaxWdlAmt'].hasError('required') && cardTypeFromGroup.controls['cumMaxWdlAmt'].touched">
+                                        CumulativeMax WDL Amt is required.
+                                    </mat-error>
+                                    <mat-error
+                                        *ngIf="cardTypeFromGroup.controls['cumMaxWdlAmt'].hasError('pattern') && cardTypeFromGroup.controls['cumMaxWdlAmt'].touched">
+                                        Only numeric values are allowed.
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        
+                            <div class="col-sm-3">
+                                <mat-form-field class="example-half-width">
+                                    <mat-label>CumulativeMax Max WDL Cnt</mat-label>
+                                    <input matInput placeholder="Enter Count" formControlName="cumMaxWdlCnt"
+                                        name="cumMaxWdlCnt" maxlength="2" [readonly]="mode=='V'">
+                                    <mat-error
+                                        *ngIf="cardTypeFromGroup.controls['cumMaxWdlCnt'].hasError('required') && cardTypeFromGroup.controls['cumMaxWdlCnt'].touched">
+                                        WDL Cnt is required.
+                                    </mat-error>
+                                    <mat-error
+                                        *ngIf="cardTypeFromGroup.controls['cumMaxWdlCnt'].hasError('pattern') && cardTypeFromGroup.controls['cumMaxWdlCnt'].touched">
+                                        Only numeric values are allowed.
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <br>
+                    </form>
+                </div>
+                <div class="card" *ngIf="showrecords">
+                    <div class="row" *ngIf="showrecords && limit.length!=0" style="margin: 20px 0px 20px 0px;">
+                        <div class="col-sm-4">
+                            <button mat-raised-button color="primary"
+                                (click)="generatecvv()"><mat-icon>check_circle_outline</mat-icon>&nbsp;Save
+                                Configuration</button>&nbsp;&nbsp;
+                            <button mat-raised-button color="warn"
+                                (click)="cancelcvvgenerate()"><mat-icon>highlight_off</mat-icon>Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> -->
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-custom-red">
+                        <div class="row">
+                            <div class="col-sm-9">
+                                <h4 class="card-title">Individual Card Limit</h4>
+                            </div>
+                            <div class="col-sm-3"></div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <br>
+                        <div class="row">
+                            <div class="col-md-9">
+                                <mat-radio-group [(ngModel)]="selectedOption" (ngModelChange)="onSelectionChange()">
+                                    <mat-radio-button value="customerId" class="radio-spacing">Customer
+                                        ID</mat-radio-button>
+                                    <mat-radio-button value="cardNumber" class="radio-spacing">Card
+                                        Number</mat-radio-button>
+                                </mat-radio-group>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4" *ngIf="selectedOption">
+                                <mat-form-field appearance="fill">
+                                    <mat-label>{{ getLabelForSelection(selectedOption) }}</mat-label>
+                                    <input matInput [(ngModel)]="userInput"
+                                        [placeholder]="getPlaceholderForSelection(selectedOption)"
+                                        [minlength]="getMinLengthForSelection(selectedOption)"
+                                        [pattern]="getPatternForSelection(selectedOption)"
+                                        [maxlength]="getMaxLengthForSelection(selectedOption)" required
+                                        #inputModel="ngModel">
+                                    <mat-error *ngIf="inputModel.invalid && inputModel.touched">
+                                        {{ getErrorMessage(inputModel, selectedOption) }}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col-md-12 d-flex justify-content-end" *ngIf="selectedOption && userInput">
+                                <button mat-raised-button color="primary" style="margin-top: 20px;"
+                                    (click)="retrieveData()">
+                                    <mat-icon>view_list</mat-icon>&nbsp;Retrieve
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card" *ngIf="showrecords">
+                    <div class="col-md-12 mat-elevation-z12">
+                        <div class="example-container">
+                            <table mat-table [dataSource]="dataSource">
+                                <ng-container matColumnDef="chnMask">
+                                    <th mat-header-cell *matHeaderCellDef> CHN </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.chnMask}}</td>
+                                </ng-container>
+                                <ng-container matColumnDef="customerId">
+                                    <th mat-header-cell *matHeaderCellDef> Customer Id </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.customerId}}</td>
+                                </ng-container>
+                                <ng-container matColumnDef="primaryAccountnumber">
+                                    <th mat-header-cell *matHeaderCellDef> PAN </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.primaryAccountnumber}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="customerName">
+                                    <th mat-header-cell *matHeaderCellDef> Customer Name </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.customerName}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="mobNo">
+                                    <th mat-header-cell *matHeaderCellDef> Mobile </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.mobNo}} </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                                <tr class="mat-row" *matNoDataRow>
+                                    <td class="mat-cell" colspan="9">No Records Found !!!!
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" *ngIf="showrecords">
+                    <form [formGroup]="cardTypeFromGroup">
+                        <div><br></div>
+                        <div class="row1">
+                            <div class="col-sm-3">
+                                <mat-form-field appearance="outline" style="width: 100%;">
+                                    <mat-label>From Date</mat-label>
+                                    <input matInput [matDatepicker]="fromDatePicker" formControlName="fromDate"
+                                        [max]="today" readonlyInput />
+                                    <mat-hint>MM/DD/YYYY</mat-hint>
+                                    <mat-datepicker-toggle matSuffix [for]="fromDatePicker"></mat-datepicker-toggle>
+                                    <mat-datepicker #fromDatePicker></mat-datepicker>
+                                    <mat-error *ngIf="cardTypeFromGroup.get('fromDate').hasError('required')">
+                                        From Date is required
+                                    </mat-error>
+                                    <mat-error *ngIf="cardTypeFromGroup.get('fromDate').hasError('validateDate')">
+                                        Invalid From Date
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col-sm-3">
+                                <mat-form-field appearance="outline" style="width: 100%;">
+                                    <mat-label>To Date</mat-label>
+                                    <input matInput [matDatepicker]="toDatePicker" formControlName="toDate"
+                                        [min]="cardTypeFromGroup.get('fromDate')?.value" readonlyInput />
+                                    <mat-hint>MM/DD/YYYY</mat-hint>
+                                    <mat-datepicker-toggle matSuffix [for]="toDatePicker"></mat-datepicker-toggle>
+                                    <mat-datepicker #toDatePicker></mat-datepicker>
+                                    <mat-error *ngIf="cardTypeFromGroup.get('toDate').hasError('required')">
+                                        To Date is required
+                                    </mat-error>
+                                    <mat-error *ngIf="cardTypeFromGroup.get('toDate').hasError('validateDate')">
+                                        Invalid To Date
+                                    </mat-error>
+                                    <mat-error *ngIf="cardTypeFromGroup.get('toDate').hasError('invalidDateRange')">
+                                        To Date must be after From Date
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <br>
+                        <div class="row1">
+                            <div class="col-sm-4">
+                                <mat-form-field class="example-half-width">
+                                    <mat-label> Cumulative Maximum Amount</mat-label>
+                                    <input matInput placeholder="Enter Amount" formControlName="cumMaxWdlAmt"
+                                        name="cumMaxWdlAmt" maxlength="7" [readonly]="mode=='V'">
+                                    <mat-error *ngIf="cardTypeFromGroup.get('cumMaxWdlAmt').hasError('required')">
+                                        Cumulative Max  Amt is required
+                                    </mat-error>
+                                    <mat-error *ngIf="cardTypeFromGroup.get('cumMaxWdlAmt').hasError('pattern')">
+                                        Only numeric values are allowed
+                                    </mat-error>
+                                    <mat-error *ngIf="cardTypeFromGroup.get('cumMaxWdlAmt').hasError('min')">
+                                        Amount cannot be negative
+                                    </mat-error>
+                                    <mat-error *ngIf="cardTypeFromGroup.get('cumMaxWdlAmt').hasError('max')">
+                                        Amount cannot exceed 9,999,999
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col-sm-4">
+                                <mat-form-field class="example-half-width">
+                                    <mat-label>Cumulative Maximum Count</mat-label>
+                                    <input matInput placeholder="Enter Count" formControlName="cumMaxWdlCnt"
+                                        name="cumMaxWdlCnt" maxlength="2" [readonly]="mode=='V'">
+                                    <mat-error *ngIf="cardTypeFromGroup.get('cumMaxWdlCnt').hasError('required')">
+                                        Cumulative Cnt is required
+                                    </mat-error>
+                                    <mat-error *ngIf="cardTypeFromGroup.get('cumMaxWdlCnt').hasError('pattern')">
+                                        Only numeric values are allowed
+                                    </mat-error>
+                                    <mat-error *ngIf="cardTypeFromGroup.get('cumMaxWdlCnt').hasError('min')">
+                                        Count cannot be negative
+                                    </mat-error>
+                                    <mat-error *ngIf="cardTypeFromGroup.get('cumMaxWdlCnt').hasError('max')">
+                                        Count cannot exceed 99
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <br>
+                    </form>
+                </div>
+                <div class="card" *ngIf="showrecords">
+                    <div class="row" *ngIf="showrecords && limit.length!=0" style="margin: 20px 0px 20px 0px;">
+                        <div class="col-sm-4">
+                            <button mat-raised-button color="primary" (click)="generatecvv()"
+                                [disabled]="cardTypeFromGroup.invalid">
+                                <mat-icon>check_circle_outline</mat-icon>&nbsp;Save Configuration
+                            </button>&nbsp;&nbsp;
+                            <button mat-raised-button color="warn"
+                                (click)="cancelcvvgenerate()"><mat-icon>highlight_off</mat-icon>Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

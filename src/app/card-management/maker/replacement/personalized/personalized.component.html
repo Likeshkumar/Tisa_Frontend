@@ -1,0 +1,156 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Search Form Card -->
+                <div class="card">
+                    <div class="card-header card-header-custom-red">
+                        <div class="row">
+                            <div class="col-sm-9">
+                                <h4 class="card-title">Personalized Card Replacement</h4>
+                            </div>
+                            <div class="col-sm-3"></div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <br>
+                        <p style="color: red; font-weight: bold;">Note : Before proceeding with the card
+                            replacement, kindly mark the old card as [ LOST/STOLEN ].</p>
+                        <div class="row">
+                            <div class="col-md-9">
+                                <mat-radio-group [(ngModel)]="selectedOption" (ngModelChange)="onSelectionChange()">
+                                    <!-- <mat-radio-button value="account" class="radio-spacing">Account
+                                        Number</mat-radio-button> -->
+                                    <!-- <mat-radio-button value="customerName" class="radio-spacing">Customer
+                                        Name</mat-radio-button> -->
+                                    <mat-radio-button value="customerId" class="radio-spacing">Customer
+                                        ID</mat-radio-button>
+                                    <mat-radio-button value="cardNumber" class="radio-spacing">Card
+                                        Number</mat-radio-button>
+                                </mat-radio-group>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4" *ngIf="selectedOption">
+                                <mat-form-field appearance="fill">
+                                    <mat-label>{{ getLabelForSelection(selectedOption) }}</mat-label>
+                                    <input matInput [(ngModel)]="userInput"
+                                        [placeholder]="getPlaceholderForSelection(selectedOption)"
+                                        [minlength]="getMinLengthForSelection(selectedOption)"
+                                        [pattern]="getPatternForSelection(selectedOption)"
+                                        [maxlength]="getMaxLengthForSelection(selectedOption)" required
+                                        #inputModel="ngModel">
+                                    <mat-error *ngIf="inputModel.invalid && inputModel.touched">
+                                        {{ getErrorMessage(inputModel, selectedOption) }}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col-md-12 d-flex justify-content-end" *ngIf="selectedOption && userInput"
+                                [disabled]="!userInput">
+                                <button mat-raised-button color="primary" style="margin-top: 20px;"
+                                    (click)="retrieveData()">
+                                    <mat-icon>view_list</mat-icon>&nbsp;Retrieve
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card Details Card -->
+                <div class="card" *ngIf="showCardDetails">
+                    <div class="card-header">
+                        <h4 class="card-title text-center" style="font-weight: bold;">Card Details</h4>
+                        <hr>
+                    </div>
+                    <div class="card-body">
+
+                        <div class="row" *ngIf="chnMaskList.length > 1">
+                            <div class="col-md-4">
+                                <mat-form-field appearance="fill" class="w-100">
+                                    <mat-label>Select Card</mat-label>
+                                    <mat-select [(ngModel)]="selectedChnMask"
+                                        (selectionChange)="onChnMaskChange($event.value)">
+                                        <mat-option *ngFor="let mask of chnMaskList" [value]="mask">
+                                            {{ mask }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <!-- Card Detail Layout -->
+                        <div class="row" *ngIf="customerData">
+                            <div class="col-md-3">
+                                <mat-list>
+                                    <mat-list-item class="colorchangeforheader">Card Holder No</mat-list-item>
+                                    <mat-list-item class="colorchangeforheader">Product Name</mat-list-item>
+                                    <mat-list-item class="colorchangeforheader">Type of Card </mat-list-item>
+                                    <mat-list-item class="colorchangeforheader">Account Type</mat-list-item>
+                                    <mat-list-item class="colorchangeforheader">Branch Name</mat-list-item>
+                                </mat-list>
+                            </div>
+
+                            <div class="col-md-3">
+                                <mat-list>
+                                    <mat-list-item class="colorchange">{{ customerData.chnMask }}</mat-list-item>
+                                    <mat-list-item class="colorchange">{{ customerData.productcode }} - {{
+                                        customerData.productName }}</mat-list-item>
+                                    <mat-list-item class="colorchange">{{ customerData.typeofCard }} - {{
+                                        customerData.description }}</mat-list-item>
+                                    <mat-list-item class="colorchange">{{ customerData.accttype }} - {{
+                                        customerData.acctdesc }}</mat-list-item>
+                                    <mat-list-item class="colorchange">{{ customerData.branchcode }} - {{
+                                        customerData.branchName }}</mat-list-item>
+                                </mat-list>
+                            </div>
+
+                            <div class="col-md-3">
+                                <mat-list>
+                                    <mat-list-item class="colorchangeforheader">Account Number </mat-list-item>
+                                    <mat-list-item class="colorchangeforheader">Customer Id</mat-list-item>
+                                    <mat-list-item class="colorchangeforheader">Customer Name</mat-list-item>
+                                    <mat-list-item class="colorchangeforheader">Mobile Number</mat-list-item>
+                                    <mat-list-item class="colorchangeforheader">CardMAN Card Status</mat-list-item>
+                                    <mat-list-item class="colorchangeforheader">Switch Card Status</mat-list-item>
+                                </mat-list>
+                            </div>
+
+                            <div class="col-md-3">
+                                <mat-list>
+                                    <mat-list-item class="colorchange">{{ customerData.acctno }}</mat-list-item>
+                                    <mat-list-item class="colorchange">{{ customerData.customerId }}</mat-list-item>
+                                    <mat-list-item class="colorchange">{{ customerData.embName }}</mat-list-item>
+                                    <mat-list-item class="colorchange">{{ customerData.mobileNo }}</mat-list-item>
+                                    <mat-list-item class="colorchange">{{ customerData.cardmanCardStatus
+                                        }}</mat-list-item>
+                                    <mat-list-item class="colorchange">{{ customerData.switchCardStatus
+                                        }}</mat-list-item>
+                                </mat-list>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="d-flex justify-content-center">
+                            <button mat-raised-button color="primary" (click)="submitstatus()">Submit</button>
+                            <button mat-raised-button color="accent" style="margin-left: 20px;"
+                                (click)="back()">Cancel</button>
+                        </div>
+                        <!-- Status Change Form -->
+                        <!-- <div class="row">
+                            <div class="col-sm-4">
+                                <button mat-raised-button color="primary" [disabled]="!changeStat"
+                                    (click)="submitstatus()">Submit</button>
+                                &nbsp;&nbsp;
+                                <button mat-raised-button color="warn" (click)="back()">Cancel</button>
+                            </div>
+                            <div class="col-sm-2"></div>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,145 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-custom-red">
+                        <div class="row">
+                            <div class="col-sm-9">
+                                <h4 class="card-title">Card Stock Requisition to Head Office</h4>
+                            </div>
+                            <div class="col-sm-3"></div>
+                        </div>
+                    </div>
+                    <div class="card-body" style="margin-top: 20px;">
+                        <form [formGroup]="bankRequest">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <mat-form-field class="example-full-width">
+                                        <mat-label>Product Code</mat-label>
+                                        <mat-select formControlName="productcode" [(ngModel)]="productObj"
+                                            (selectionChange)="gettypeofCard()">
+                                            <mat-option *ngFor="let product of productlist" [value]="product">
+                                                {{ product.productCode }} - {{ product.productDesc }}
+                                            </mat-option>
+                                            <mat-option *ngIf="productlist?.length === 0">No Records
+                                                Found</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-sm-3">
+                                    <mat-form-field class="example-full-width">
+                                        <mat-label>Type of Card</mat-label>
+                                        <mat-select formControlName="typeofCard">
+                                            <mat-option *ngFor="let cardType of cardtypeList"
+                                                [value]="cardType">{{cardType.typeofCard}} -
+                                                {{cardType.description}}</mat-option>
+                                            <mat-option *ngIf="cardtypeList?.length === 0">No Records
+                                                Found</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-sm-3">
+                                    <mat-form-field>
+                                        <mat-label>Branch</mat-label>
+                                        <mat-select placeholder="Branch" formControlName="branchcode"
+                                            [disabled]="isBranchDropdownDisabled">
+                                            <!-- <mat-select-filter placeholder="Search" [displayMember]="'branchCode'"
+                                                [array]="branchlist" (filteredReturn)="filteredList2 = $event">
+                                            </mat-select-filter> -->
+                                            <mat-option value="all">All</mat-option>
+                                            <mat-option *ngFor="let item of filteredList2" [value]="item">
+                                                {{ item.branchCode }} - {{ item.branchName }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <!-- <mat-form-field>
+                                        <mat-label>Branch</mat-label>
+                                        <mat-select formControlName="branchcode" [disabled]="isBranchDropdownDisabled">
+                                            <mat-option *ngFor="let branch of branchList"
+                                                [value]="branch">{{branch.branchCode }} - {{branch.branchName}}
+                                            </mat-option>
+                                            <mat-option *ngIf="branchList?.length === 0">No Records
+                                                Found</mat-option>
+                                        </mat-select>
+                                    </mat-form-field> -->
+                                </div>
+                                <div class="col-sm-3">
+                                    <mat-form-field>
+                                        <mat-label>CHN Count</mat-label>
+                                        <input matInput type="tel" formControlName="chnCount"
+                                            placeholder="Enter CHN Count" maxlength="3" minlength="1">
+                                        <mat-error *ngIf="bankRequest.get('chnCount')?.hasError('required')">
+                                            CHN Count is required
+                                        </mat-error>
+                                        <mat-error *ngIf="bankRequest.get('chnCount')?.hasError('pattern')">
+                                            CHN Count must be between 1 and 3 digits
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-3">
+                                    <mat-form-field>
+                                        <mat-label>Expected Date</mat-label>
+                                        <input matInput [matDatepicker]="picker3" formControlName="deadLine">
+                                        <mat-hint>MM/DD/YYYY</mat-hint>
+                                        <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker3></mat-datepicker>
+                                        <mat-error *ngIf="bankRequest.get('deadLine')?.hasError('invalidDate')">
+                                            Expected Should be in the future.
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-6">
+                                    <mat-form-field>
+                                        <mat-label>Remarks</mat-label>
+                                        <input matInput formControlName="remarks" placeholder="Enter Remarks"
+                                            maxlength="60">
+                                        <mat-error *ngIf="bankRequest.get('remarks')?.hasError('required')">
+                                            Remarks is required.
+                                        </mat-error>
+                                        <mat-error *ngIf="bankRequest.get('remarks')?.hasError('maxlength')">
+                                            Remarks cannot exceed 250 characters.
+                                        </mat-error>
+                                        <mat-error *ngIf="bankRequest.get('remarks')?.hasError('pattern')">
+                                            Alphabets and spaces only allowed.
+                                        </mat-error>
+                                        <mat-error *ngIf="bankRequest.get('remarks')?.hasError('whitespace')">
+                                            Only spaces are not allowed.
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-3">
+                                    <mat-form-field>
+                                        <mat-label>Priority </mat-label>
+                                        <mat-select formControlName="seveity">
+                                            <mat-option value="High">High Priority</mat-option>
+                                            <mat-option value="Medium">Medium Priority</mat-option>
+                                            <mat-option value="Low">Low Priority</mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="bankRequest.get('seveity')?.hasError('required')">
+                                            Priority is required.
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </form>
+
+                        <div class="d-flex justify-content-center">
+                            <button mat-stroked-button color="warn" style="margin-right: 20px;"
+                                (click)="bankRequest.reset()">
+                                <mat-icon>refresh</mat-icon> Reset
+                            </button>
+                            <button mat-stroked-button color="primary" style="margin-right: 20px;"
+                                (click)="bankRequestSubmit()" [disabled]="bankRequest.invalid">
+                                <mat-icon>check_circle</mat-icon> Request
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

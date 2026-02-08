@@ -1,0 +1,11 @@
+<h2 mat-dialog-title>User Details</h2>
+<mat-dialog-content class="dialog-content">
+  <p><strong>Profile Name:</strong> {{ data.profilename }}</p>
+  <p><strong>User Name:</strong> {{ data.username }}</p>
+  <p><strong>Email Id:</strong> {{ data.email }}</p>
+  <p><strong>Mobile Number:</strong> {{ data.mobile }}</p>
+  <p><strong>Last Login:</strong> {{ data.logindate }}</p>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="closeDialog()">Close</button>
+</mat-dialog-actions>

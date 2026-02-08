@@ -1,0 +1,125 @@
+input[type="text"] {
+    color: white !important;
+}
+
+.form-control,
+.is-focused .form-control {
+    background-image: linear-gradient(to top,
+            #fff 2px,
+            rgba(156, 39, 176, 0) 2px), linear-gradient(to top, #d2d2d2 1px, rgba(210, 210, 210, 0) 1px);
+}
+
+.material-icons.md-18 {
+    font-size: 12px;
+}
+
+.mat-raised-button .fetchData {
+    background-color: darkcyan;
+}
+
+table {
+    width: 100%;
+}
+
+.card-header-custom-red {
+    background-color: #e72838;
+    color: #fff;
+}
+
+.mat-header-cell {
+    font-size: 16px;
+    font-weight: 900;
+    color: mediumvioletred;
+}
+
+.mat-cell {
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.example-form {
+    min-width: 150px;
+    max-width: 500px;
+    width: 100%;
+}
+
+.example-full-width {
+    width: 100%;
+    padding-top: 10px;
+}
+
+
+mat-radio-group {
+    margin-left: 8px;
+}
+
+.three-columns-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: auto;
+    gap: 1rem;
+    width: 100%;
+    align-items: stretch;
+    margin: 10px;
+}
+
+.three-columns-grid>* {
+    padding: 0;
+}
+
+.six-columns-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: auto;
+    gap: 1rem;
+    width: 100%;
+    align-items: stretch;
+    margin: 10px;
+
+
+}
+
+.six-columns-grid>* {
+    padding: 0;
+}
+
+.six-columns-grid input[type="text"] {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+
+
+@media (max-width: 768px) {
+    .six-columns-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .six-columns-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+
+
+mat-form-field {
+    width: 100%;
+}
+
+mat-label,
+label {
+    color: #03354e;
+    font-weight: 500;
+}
+
+.roww {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 10vh;
+    gap: 4px;
+    font-size: 20px;
+    text-decoration: underline;
+}

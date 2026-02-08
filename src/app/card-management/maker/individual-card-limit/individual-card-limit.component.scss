@@ -1,0 +1,48 @@
+.card-header-custom-red {
+    background-color: #e72838;
+    color: #fff;
+}
+
+table {
+    width: 100%;
+}
+
+.mat-header-cell {
+    font-size: 16px;
+    font-weight: 900;
+    color: mediumvioletred;
+}
+
+.mat-cell {
+    font-weight: 700;
+    font-size: 14px;
+}
+
+mat-label {
+    color: #03354e;
+    font-weight: 500;
+}
+
+label {
+    color: #03354e;
+    font-weight: 500;
+}
+
+.example-half-width {
+    width: 80%;
+    padding-top: 20px;
+}
+
+.radio-spacing {
+    margin-right: 15px;
+    margin-bottom: 15px;
+}
+
+.row1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 10vh;
+    gap: 20px;
+    font-size: 16px;
+}

@@ -1,0 +1,254 @@
+
+mat-sidenav {
+  background-repeat: no-repeat;
+  min-width: 400px;
+  max-width: 500px;
+  background-size: cover;
+  background-position: center;
+}
+
+
+mat-sidenav-container {
+  background-color: #ffff;
+  height: calc(100vh - 10px);
+}
+
+::ng-deep .mat-mdc-button[disabled],
+.mat-mdc-button.mat-mdc-button-disabled {
+  background-color: whitesmoke !important;
+  color: #C7C8CC !important;
+}
+
+mat-card {
+  background: transparent !important;
+  border-radius: 10px;
+}
+
+.img-bg {
+  border-radius: 50%;
+  background-color: white;
+  height: 15vh;
+  width: 7vw;
+  margin-top: -65px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .img-bg {
+    height: 12vh;
+    width: 12vh;
+    margin-top: -55px;
+  }
+}
+
+@media (max-width: 576px) {
+  .img-bg {
+    height: 10vh;
+    width: 10vh;
+    margin-top: -45px;
+  }
+}
+
+.img-bg img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+mat-form-field {
+  width: 100%;
+  color: #026701;
+}
+
+
+:host::ng-deep.mat-form-field-flex {
+  background: white !important;
+}
+
+.sib-bg-primary {
+  background-color: #026701;
+}
+
+.sib-font-color-primary {
+  color: #026701 !important;
+}
+
+.sib-btn-primary {
+  background-color: #03AAAA !important;
+  color: white !important;
+}
+
+
+:host::ng-deep.mat-drawer-inner-container::-webkit-scrollbar {
+  width: 10px;
+}
+
+:host::ng-deep.mat-drawer-inner-container::-webkit-scrollbar-thumb {
+  background-color: #ffff;
+  border-radius: 10px;
+}
+
+:host::ng-deep.mat-drawer-inner-container::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 10px;
+}
+
+input {
+  color: black;
+}
+
+
+.heading-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.main-heading {
+  font-size: 2em;
+  font-weight: bold;
+  color: #396104;
+  animation: fadeIn 3s ease-in-out;
+}
+
+.sub-heading {
+  font-size: 1.5em;
+  color: #10a1ac;
+  margin-top: 10px;
+  text-shadow: 200px;
+
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+#login {
+  margin-top: 20px;
+}
+
+#login input {
+  padding: 10px 100px 10px 100px;
+  border-radius: 15px;
+}
+
+
+#login input:hover {
+  padding: 10px 100px 10px 100px;
+  border-radius: 15px;
+  background-color: #d32f2f;
+  color: white;
+  cursor: pointer;
+}
+
+.reset-password-btn {
+  padding: 10px 30px 10px 30px;
+  border-radius: 15px;
+  background-color: #03AAAA;
+  color: white;
+}
+
+.reset-password-btn:hover {
+  background-color: #61baff;
+  color: white;
+  cursor: pointer;
+}
+
+.password-strength {
+  text-align: center;
+  margin-top: 10px;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.password-strength .weak {
+  color: red;
+}
+
+.password-strength .medium {
+  color: orange;
+}
+
+.password-strength .strong {
+  color: green;
+}
+
+.login-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 2rem;
+
+  .logo {
+    width: 80px;
+    height: auto;
+    margin-bottom: 1rem;
+  }
+
+  .title-section {
+    .title {
+      font-size: 1.8rem;
+      font-weight: 600;
+      margin: 0;
+
+      .prefix {
+        font-size: 1rem;
+        color: #555;
+        display: block;
+        margin-bottom: 0.2rem;
+      }
+      
+      .brand-red {
+        color: #d32f2f;
+      }
+
+      .brand-gray {
+        color: #4a4a4a; 
+      }
+    }
+
+    .tagline {
+      font-size: 1.1rem;
+      color: #555;
+      margin-top: 6px;
+      margin-bottom: 4px;
+      font-weight: 500;
+    }
+
+    .secure-text {
+      font-size: 0.9rem;
+      color: #888;
+      margin: 0;
+    }
+  }
+}
+
+.mat-icon{
+  color: #4a4a4a; 
+}
+
+
+.cashlink-footer-logo {
+    height: 50px; 
+    width: auto;
+    margin-right: 5px;
+    vertical-align: middle;
+
+}
+
+.footer-powered-by {
+    font-size: 0.85em; 
+    font-weight:bolder; 
+    color: rgb(50, 50, 50); 
+}
+

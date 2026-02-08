@@ -1,0 +1,36 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header card-header-custom-red">
+                <div class="row">
+                    <div class="col-sm-9">
+                        <h4 class="card-title">Card Encryption</h4>
+                        <p class="card-category"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body" style="margin-top: 30px;">
+                <div class="row">
+                    <div class="col-sm-5">
+                        <mat-form-field class="example-full-width" appearance="outline">
+                            <mat-label>Enter Card Number</mat-label>
+                            <input type="text" matInput [(ngModel)]="cardNo" minlength="16" maxlength="19">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-5">
+                        <button mat-raised-button style="margin-top: 15px;" color="primary"
+                            (click)="encrypt()">Encrypt</button>
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 20px;" *ngIf="encryptedCardNo">
+                    <div class="col-sm-5">
+                        <mat-form-field class="example-full-width" appearance="outline">
+                            <mat-label>Encrypted Card Number</mat-label>
+                            <input type="text" matInput [(ngModel)]="encryptedCardNo" readonly>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

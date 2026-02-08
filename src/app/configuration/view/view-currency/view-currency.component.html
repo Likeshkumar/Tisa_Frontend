@@ -1,0 +1,132 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-custom-red">
+                        <div class="row">
+                            <div class="col-sm-9">
+                                <h4 class="card-title">Currency Configuration</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body" *ngIf="mode==='L'">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <mat-form-field class="full-width">
+                                    <mat-label>Search</mat-label>
+                                    <input matInput (keyup)="applyFilter($event)" placeholder="Ex Username" #input>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="col-md-12 mat-elevation-z12" *ngIf="showrecords">
+                            <div class="example-container">
+                                <table mat-table [dataSource]="dataSource">
+
+                                    <ng-container matColumnDef="sno">
+                                        <th mat-header-cell *matHeaderCellDef>S.No</th>
+                                        <td mat-cell *matCellDef="let row; let i = index"> {{ i + 1 }} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="currencyCode">
+                                        <th mat-header-cell *matHeaderCellDef>Currency Code</th>
+                                        <td mat-cell *matCellDef="let element"> {{ element.currencyCode }} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="currencyDesc">
+                                        <th mat-header-cell *matHeaderCellDef>Currency Description</th>
+                                        <td mat-cell *matCellDef="let element"> {{ element.currencyDesc }} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="action">
+                                        <th mat-header-cell *matHeaderCellDef>Action</th>
+                                        <td mat-cell *matCellDef="let element">
+                                            <button mat-icon-button aria-label="View" color="primary" matTooltip='View'
+                                                (click)="onRowClick(element,'V')"><mat-icon>visibility</mat-icon></button>
+                                            <!-- <button mat-icon-button aria-label="Edit" color="text-secondary"
+                                                matTooltip='Edit' matTooltipClass="example-tooltip-red"
+                                                (click)="onRowClick(element,'E')"><mat-icon>edit_note</mat-icon></button>
+                                            <button mat-icon-button aria-label="Delete" color="accent"
+                                                matTooltip='Delete' matTooltipClass="example-tooltip-red"
+                                                (click)="deleteCurrency(element)"><mat-icon>delete</mat-icon></button> -->
+                                        </td>
+                                    </ng-container>
+
+                                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                                    <tr class="mat-row" *matNoDataRow>
+                                        <td class="mat-cell" colspan="9">No Records Found !!!!
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <mat-paginator [pageSizeOptions]="[5,10,15,20,50]" #paginatorRef showFirstLastButtons
+                                aria-label="Select page of periodic elements">
+                            </mat-paginator>
+                        </div>
+
+                    </div>
+
+                    <div class="card-body" style="margin-top: 20px;margin-bottom: 50px;" *ngIf="mode!='L'">
+                        <form [formGroup]="currencyFromGroup">
+                            <div class="row">
+                                <div class="three-columns-grid">
+
+                                    <mat-form-field class="example-full-width">
+                                        <mat-label>Currency Code</mat-label>
+                                        <input matInput formControlName="currencyCode" placeholder="Currency Code"
+                                            maxlength="3" minlength="3" [readonly]="mode=='V'">
+                                        <mat-error
+                                            *ngIf="currencyFromGroup.controls['currencyCode'].hasError('required')">
+                                            Currency Code is required.
+                                        </mat-error>
+                                        <mat-error
+                                            *ngIf="currencyFromGroup.controls['currencyCode'].hasError('pattern')">
+                                            Currency Code must contain only numbers.
+                                        </mat-error>
+                                    </mat-form-field>
+
+                                    <mat-form-field class="example-full-width">
+                                        <mat-label>Currency Description</mat-label>
+                                        <input matInput formControlName="currencyDesc"
+                                            placeholder="Currency Description" minlength="3" maxlength="25"
+                                            [readonly]="mode=='V'">
+                                        <mat-error
+                                            *ngIf="currencyFromGroup.controls['currencyDesc'].hasError('pattern')">
+                                            Currency Description must contain only letters.
+                                        </mat-error>
+                                        <mat-error
+                                            *ngIf="currencyFromGroup.controls['currencyDesc'].hasError('maxlength')">
+                                            Currency Description cannot exceed 25 characters.
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="d-flex justify-content-center">
+
+                            <button mat-stroked-button mat-dialog-close color="warn" style="margin-right: 20px;"
+                                (click)="clear()" *ngIf="mode==='A'">
+                                <mat-icon>refresh</mat-icon> Reset
+                            </button>
+
+                            <button mat-stroked-button mat-dialog-close color="primary" style="margin-right: 20px;"
+                                (click)="backList()">
+                                <mat-icon>arrow_back</mat-icon> Back
+                            </button>
+
+                            <button type="submit" mat-raised-button [color]="mode === 'E' ? 'accent' : 'primary'"
+                                class="md-btn" [disabled]="currencyFromGroup.invalid" (click)="addCurrency()"
+                                *ngIf="mode==='A' || mode==='E' || mode==='C'">
+                                <mat-icon>{{ mode === 'E' ? 'edit' : 'check_circle' }}</mat-icon>&nbsp;
+                                {{ mode === 'E' ? 'Update' : 'Submit' }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

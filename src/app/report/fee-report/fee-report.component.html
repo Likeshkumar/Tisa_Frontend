@@ -1,0 +1,165 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-custom-red">
+                        <div class="row">
+                            <div class="col-sm-9">
+                                <h4 class="card-title">Fee Report</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body" style="margin-top: 30px;">
+                        <div class="row mb-3">
+                            <div class="col-md-12 d-flex gap-4">
+                                <mat-radio-group [(ngModel)]="reportMode" (change)="onModeChange()">
+                                    <mat-radio-button value="single" class="radio-spacing" checked> Single
+                                        Record</mat-radio-button>
+                                    <!-- <mat-radio-button value="multiple" class="radio-spacing"> Multiple
+                                        Record</mat-radio-button> -->
+                                </mat-radio-group>
+                            </div>
+                        </div>
+
+                        <div *ngIf="reportMode === 'single'">
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <mat-radio-group [(ngModel)]="selectedOption" (ngModelChange)="onSelectionChange()">
+                                        <!-- <mat-radio-button value="account" class="radio-spacing">Account
+                                            Number</mat-radio-button> -->
+                                        <mat-radio-button value="cardNumber" class="radio-spacing" Checked>Card
+                                            Number</mat-radio-button>
+                                    </mat-radio-group>
+                                </div>
+                            </div>
+
+                            <div class="row mt-3">
+                                <div class="col-md-4" *ngIf="selectedOption">
+                                    <mat-form-field appearance="fill">
+                                        <mat-label>{{ getLabelForSelection(selectedOption) }}</mat-label>
+                                        <input matInput [(ngModel)]="userInput"
+                                            [placeholder]="getPlaceholderForSelection(selectedOption)"
+                                            [minlength]="getMinLengthForSelection(selectedOption)"
+                                            [pattern]="getPatternForSelection(selectedOption)"
+                                            [maxlength]="getMaxLengthForSelection(selectedOption)" required
+                                            #inputModel="ngModel">
+                                        <mat-error *ngIf="inputModel.invalid && inputModel.touched">
+                                            {{ getErrorMessage(inputModel, selectedOption) }}
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-12 d-flex justify-content-end">
+                                    <button mat-raised-button color="primary" (click)="getSingleRecordData()"
+                                        [disabled]="!isFormValid()">
+                                        <mat-icon>view_list</mat-icon>&nbsp;Retrieve
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <form [formGroup]="reportForm" *ngIf="reportMode === 'multiple'">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <mat-form-field>
+                                        <mat-label>From Date</mat-label>
+                                        <input matInput [matDatepicker]="pickerFrom" formControlName="fromDate"
+                                            [max]="today" (dateChange)="onFromDateChange()" readonly>
+                                        <mat-datepicker-toggle matSuffix [for]="pickerFrom"></mat-datepicker-toggle>
+                                        <mat-datepicker #pickerFrom></mat-datepicker>
+                                        <mat-error *ngIf="reportForm.get('fromDate').hasError('required')">
+                                            From Date is required
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-3">
+                                    <mat-form-field>
+                                        <mat-label>To Date</mat-label>
+                                        <input matInput [matDatepicker]="pickerTo" formControlName="toDate"
+                                            [max]="today" [min]="minToDate" readonly>
+                                        <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
+                                        <mat-datepicker #pickerTo></mat-datepicker>
+                                        <mat-error *ngIf="reportForm.get('toDate').hasError('required')">
+                                            To Date is required
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card" *ngIf="reportMode === 'single' && showCardDetails">
+                    <div class="card-header">
+                        <h4 class="card-title text-center" style="font-weight: bold;">Fee Report Details</h4>
+                        <hr>
+                    </div>
+                    <div class="card-body">
+                        <div class="row alignTable" *ngIf="showrecords">
+                            <div class="col-md-12 mat-elevation-z12">
+                                <div class="example-container">
+                                    <table mat-table [dataSource]="dataSource">
+                                        <ng-container matColumnDef="customerName">
+                                            <th mat-header-cell *matHeaderCellDef> Customer Name </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.customerName}} </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="chnMask">
+                                            <th mat-header-cell *matHeaderCellDef> chnMask </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.chnMask}} </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="accountNo">
+                                            <th mat-header-cell *matHeaderCellDef> AccountNo </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.accountNo}} </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="feeAmount">
+                                            <th mat-header-cell *matHeaderCellDef> Fee Amount </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.feeAmount}} </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="feeTax">
+                                            <th mat-header-cell *matHeaderCellDef>Fee Tax</th>
+                                            <td mat-cell *matCellDef="let element"> {{element.feeTax}} </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="feetxn">
+                                            <th mat-header-cell *matHeaderCellDef> Fee Txn </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.feetxn}} </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="debitDate">
+                                            <th mat-header-cell *matHeaderCellDef> Debit Date </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.debitDate}} </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="debitReason">
+                                            <th mat-header-cell *matHeaderCellDef> Debit Reason </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.debitReason}} </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="failureDesc">
+                                            <th mat-header-cell *matHeaderCellDef> Failure Reason </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.failureDesc}} </td>
+                                        </ng-container>
+                                        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                                        <tr class="mat-row" *matNoDataRow>
+                                            <td class="mat-cell" colspan="9">No Records Found</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <mat-paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons></mat-paginator>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-center mt-4">
+                    <button mat-raised-button color="primary" class="mx-2" (click)="exportReport('pdf')"
+                        [disabled]="!isExportAllowed()">
+                        PDF
+                    </button>
+                    <button mat-raised-button color="primary" class="mx-2" (click)="exportReport('xlsx')"
+                        [disabled]="!isExportAllowed()">
+                        Excel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

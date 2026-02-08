@@ -1,0 +1,77 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-custom-red">
+                        <div class="row">
+                            <div class="col-sm-9">
+                                <h4 class="card-title">Embossing File Download</h4>
+                            </div>
+                            <div class="col-sm-3">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-body" style="margin-top: 20px;">
+                        <form [formGroup]="preForm">
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <mat-form-field class="example-full-width">
+                                        <mat-label>Product Code</mat-label>
+                                        <mat-select formControlName="productcode" [(ngModel)]="productObj"
+                                            (selectionChange)="gettypeofCard()">
+                                            <mat-option *ngFor="let product of productlist" [value]="product">
+                                                {{ product.productCode }} - {{ product.productDesc }}
+                                            </mat-option>
+                                            <mat-option *ngIf="productlist?.length === 0">No Records
+                                                Found</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-2">
+                                    <mat-form-field class="example-full-width">
+                                        <mat-label>Type of Card</mat-label>
+                                        <mat-select formControlName="typeofCard" (selectionChange)="onCardTypeChange()">
+                                            <mat-option *ngFor="let cardType of cardtypeList"
+                                                [value]="cardType">{{cardType.typeofCard}} -
+                                                {{cardType.description}}</mat-option>
+                                            <mat-option *ngIf="cardtypeList?.length === 0">No Records
+                                                Found</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-2">
+                                    <mat-form-field class="example-full-width">
+                                        <mat-label>PRE File</mat-label>
+                                        <mat-select formControlName="preFileFormate" (selectionChange)="getbatchlist()">
+                                            <mat-option value="NF">New Files</mat-option>
+                                            <mat-option value="AD">Already Downloaded </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-sm-2">
+                                    <mat-form-field class="example-full-width">
+                                        <mat-label>Select Batch Number</mat-label>
+                                        <mat-select [(ngModel)]="batchnum" [ngModelOptions]="{standalone: true}">
+                                            <mat-option *ngFor="let batch of batchlist"
+                                                [value]="batch">{{batch}}</mat-option>
+                                            <mat-option *ngIf="batchlist?.length === 0">No Records Found</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-2">
+                                    <button mat-raised-button color="primary" (click)="downloadPre()"
+                                        [disabled]="preForm.invalid || !batchnum">
+                                        <mat-icon>view_list</mat-icon>&nbsp;Download
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

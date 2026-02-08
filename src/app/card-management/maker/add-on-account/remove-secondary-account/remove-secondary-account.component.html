@@ -1,0 +1,148 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-custom-red">
+                        <div class="row">
+                            <div class="col-sm-9">
+                                <h4 class="card-title">Add On Account Removal</h4>
+                            </div>
+                            <div class="col-sm-3">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-body" style="margin-top: 20px;">
+                        <form>
+                            <div class="row">
+                                <div class="col-xs-12 col-md-6">
+                                    <mat-form-field appearance="fill">
+                                        <mat-label>Card No</mat-label>
+                                        <input type="hidden" name="cardNo">
+
+                                        <input matInput [(ngModel)]="cardNo" name="cardNo" minlength="16" maxlength="19"
+                                            required pattern="^\d{16,19}$" autocomplete="on" #cardNoInput="ngModel">
+
+                                        <mat-error *ngIf="cardNoInput.hasError('required')">
+                                            Card No is required.
+                                        </mat-error>
+                                        <mat-error
+                                            *ngIf="cardNoInput.hasError('minlength') || cardNoInput.hasError('maxlength')">
+                                            Card No must be between 16 and 19 digits.
+                                        </mat-error>
+                                        <mat-error *ngIf="cardNoInput.hasError('pattern')">
+                                            Card No must contain only numbers.
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-xs-12 col-md-6">
+                                    <button mat-raised-button color="primary"
+                                        style="margin-top: 20px; margin-left: 50px;"
+                                        (click)="getFilterRecordList()">Retrieve</button>
+                                </div>
+                            </div>
+
+                        </form>
+
+                        <br>
+                        <div class="row alignTable" *ngIf="showrecords">
+                            <div class="col-lg-6">
+                                <h5 class="headerWeight">Total selected: {{selection?.selected?.length}}</h5>
+                            </div>
+                            <div class="col-md-6">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Filter</mat-label>
+                                    <input (keyup)="applyFilter($event)" maxlength="19" matInput
+                                        placeholder="Ex.Customer Name" #input>
+                                    <mat-icon matSuffix>search</mat-icon>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-12 mat-elevation-z12">
+                                <div class="example-container">
+                                    <mat-checkbox hidden [checked]="selection.hasValue() && isSelectedPage()">all in
+                                        this page</mat-checkbox>
+                                    <table mat-table [dataSource]="dataSource">
+
+                                        <ng-container matColumnDef="select">
+                                            <th mat-header-cell *matHeaderCellDef>
+                                            </th>
+
+                                            <td mat-cell *matCellDef="let row">
+                                                <ng-container *ngIf="row.accountPriority !== 'Primary'">
+                                                    <mat-checkbox (click)="$event.stopPropagation()"
+                                                        (change)="$event ? selection.toggle(row) : null"
+                                                        [checked]="selection.isSelected(row)"
+                                                        [aria-label]="checkboxLabel(row)">
+                                                    </mat-checkbox>
+                                                </ng-container>
+                                            </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="accountNumber">
+                                            <th mat-header-cell *matHeaderCellDef> Account Number </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.accountNumber}}</td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="acctCode">
+                                            <th mat-header-cell *matHeaderCellDef> Account Type </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.acctCode}} -
+                                                {{element.acctType}} </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="subAcctType">
+                                            <th mat-header-cell *matHeaderCellDef> Account Sub Type </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.subAcctType}} -
+                                                {{element.subAcctDesc}}</td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="currencyCode">
+                                            <th mat-header-cell *matHeaderCellDef> Currency </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.currencyCode}} -
+                                                {{element.currency}}</td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="accountPriority">
+                                            <th mat-header-cell *matHeaderCellDef> Account Priority </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.accountPriority}} </td>
+                                        </ng-container>
+
+                                        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                                        <tr class="mat-row" *matNoDataRow>
+                                            <td class="mat-cell" colspan="9">No Records Found !!!!
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <mat-paginator [pageSizeOptions]="[50,100,500,1000,2000]" showFirstLastButtons
+                                    aria-label="Select page of periodic elements">
+                                </mat-paginator>
+
+                            </div>
+                        </div>
+
+                        <div class="row" *ngIf="showrecords && data.length!=0">
+                            <br>
+                            <br>
+                            <div class="col-sm-4">
+                                <br>
+                                <h5 style="font-weight: 900;">Total No. of Cards - {{data.length}}</h5>
+                            </div>
+                            <div class="col-sm-4">
+                                <br>
+                                <button mat-raised-button color="primary" (click)="issueCard()">
+                                    <mat-icon>check_circle_outline</mat-icon>&nbsp;Issue</button>&nbsp;&nbsp;
+                                <button mat-raised-button color="warn"
+                                    (click)="cancelissuance()"><mat-icon>highlight_off</mat-icon>&nbsp;Cancel</button>
+                            </div>
+                            <div class="col-sm-4">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

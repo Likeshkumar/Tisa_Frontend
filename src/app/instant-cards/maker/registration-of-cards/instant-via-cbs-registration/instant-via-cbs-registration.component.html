@@ -1,0 +1,320 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-custom-red">
+                        <div class="row">
+                            <div class="col-sm-9">
+                                <h4 class="card-title">Instant CBS Registration</h4>
+                                <p class="card-category"></p>
+                            </div>
+                            <div class="col-sm-3">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <br>
+                        <form #cardForm="ngForm">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <mat-form-field appearance="fill">
+                                        <mat-label>Card Number</mat-label>
+                                        <input matInput name="cardNumber" [(ngModel)]="cardNumber" required
+                                            maxlength="16" minlength="16" pattern="^\d{16}$" #cardNoInput="ngModel">
+                                        <mat-error *ngIf="cardNoInput.hasError('required')">
+                                            Card Number is required.
+                                        </mat-error>
+                                        <mat-error
+                                            *ngIf="cardNoInput.hasError('minlength') || cardNoInput.hasError('maxlength')">
+                                            Card Number must be 16 digits.
+                                        </mat-error>
+                                        <mat-error *ngIf="cardNoInput.hasError('pattern')">
+                                            Card Number must contain only numbers.
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-4">
+                                    <mat-form-field appearance="fill">
+                                        <mat-label>Account Number</mat-label>
+                                        <input matInput name="accountNumber" [(ngModel)]="accountNumber" required
+                                            maxlength="16" minlength="16" pattern="^\d{16}$" #accountNoInput="ngModel">
+                                        <mat-error *ngIf="accountNoInput.hasError('required')">
+                                            Account Number is required.
+                                        </mat-error>
+                                        <mat-error
+                                            *ngIf="accountNoInput.hasError('minlength') || accountNoInput.hasError('maxlength')">
+                                            Account Number must be 16 digits.
+                                        </mat-error>
+                                        <mat-error *ngIf="accountNoInput.hasError('pattern')">
+                                            Account Number must contain only numbers.
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-xs-12 col-md-4">
+                                    <button mat-raised-button color="primary"
+                                        style="margin-top: 20px; margin-left: 50px;" (click)="retrieveData()"
+                                        [disabled]="!cardForm.form.valid">
+                                        <mat-icon>view_list</mat-icon>&nbsp;Retrieve
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="card-body" *ngIf="showCardDetails">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <mat-stepper linear #stepper>
+                                <mat-step [stepControl]="secondFormGroup">
+                                    <form [formGroup]="secondFormGroup">
+                                        <div class="row">
+                                            <div class="col-sm-4">
+                                                <mat-form-field>
+                                                    <mat-label>Branch</mat-label>
+                                                    <input matInput type="text" formControlName="branchCode" readonly>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <mat-form-field>
+                                                    <mat-label>Account Number</mat-label>
+                                                    <input matInput type="tel" formControlName="accountNo" readonly>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <mat-form-field>
+                                                    <mat-label>Account Type</mat-label>
+                                                    <input matInput type="text" formControlName="accountType" readonly>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <mat-form-field>
+                                                    <mat-label>Account Sub Type</mat-label>
+                                                    <input matInput type="text"
+                                                        formControlName="subAccountTypeDescription" readonly>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <mat-form-field>
+                                                    <mat-label>Currency</mat-label>
+                                                    <input matInput type="tel" formControlName="currency" readonly>
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                        <ng-template matStepLabel>Account Information</ng-template>
+                                        <div>
+                                            <button mat-button matStepperPrevious>Back</button>
+                                            <button mat-button matStepperNext>Next</button>
+                                        </div>
+                                    </form>
+                                </mat-step>
+                                <mat-step [stepControl]="thirdFormGroup">
+                                    <form [formGroup]="thirdFormGroup">
+                                        <div class="row">
+                                            <div class="col-sm-4">
+                                                <mat-form-field>
+                                                    <mat-label>Gender</mat-label>
+                                                    <input matInput type="text" formControlName="gender" readonly>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <mat-form-field>
+                                                    <mat-label>Customer Id</mat-label>
+                                                    <input matInput type="tel" formControlName="customerId" readonly>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <mat-form-field>
+                                                    <mat-label>Encoding Name</mat-label>
+                                                    <input matInput type="text" formControlName="encodingName" readonly>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <mat-form-field>
+                                                    <mat-label>Embossing Name</mat-label>
+                                                    <input matInput type="text" formControlName="embossingName"
+                                                        readonly>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <mat-form-field>
+                                                    <mat-label>Date of Brith</mat-label>
+                                                    <input matInput type="tel" formControlName="dob" readonly>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <mat-form-field>
+                                                    <mat-label>Mother / Spouse Name</mat-label>
+                                                    <input matInput type="tel" formControlName="motherName" readonly>
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                        <ng-template matStepLabel>Customer Information</ng-template>
+                                        <div>
+                                            <button mat-button matStepperPrevious>Back</button>
+                                            <button mat-button matStepperNext>Next</button>
+                                        </div>
+                                    </form>
+                                </mat-step>
+                                <mat-step [stepControl]="fourthFormGroup">
+                                    <form [formGroup]="fourthFormGroup">
+                                        <h5 style="font-weight: bold;">Residence Address</h5>
+                                        <div class="row">
+                                            <div class="col-sm-4">
+                                                <mat-form-field>
+                                                    <mat-label>Address Line 1</mat-label>
+                                                    <input matInput type="text" formControlName="address1" readonly>
+                                                    <mat-error
+                                                        *ngIf="fourthFormGroup.controls['address1'].hasError('required')">
+                                                        Address is required.
+                                                    </mat-error>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <mat-form-field>
+                                                    <mat-label>Address Line 2</mat-label>
+                                                    <input matInput type="tel" formControlName="address2" readonly>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <mat-form-field>
+                                                    <mat-label>City</mat-label>
+                                                    <input matInput type="text" formControlName="city" readonly>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <mat-form-field>
+                                                    <mat-label>Country</mat-label>
+                                                    <input matInput type="tel" formControlName="country" readonly>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <mat-form-field>
+                                                    <mat-label>Mobile No</mat-label>
+                                                    <input matInput type="tel" formControlName="mobNo"
+                                                        placeholder="Mobile No" maxlength="9" readonly>
+                                                    <mat-error
+                                                        *ngIf="fourthFormGroup.get('mobNo').hasError('required')">
+                                                        Mobile No is required
+                                                    </mat-error>
+                                                </mat-form-field>
+                                            </div>
+
+                                            <div class="col-sm-4">
+                                                <mat-form-field>
+                                                    <mat-label>Email Id</mat-label>
+                                                    <input matInput type="email" formControlName="emailId"
+                                                        placeholder="Email Id" readonly>
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                        <ng-template matStepLabel>Contact Information</ng-template>
+                                        <div>
+                                            <button mat-button matStepperPrevious>Back</button>
+                                            <button mat-button matStepperNext>Next</button>
+                                        </div>
+                                    </form>
+                                </mat-step>
+                                <mat-step [stepControl]="firstFormGroup">
+                                    <form [formGroup]="firstFormGroup">
+                                        <div class="row">
+                                            <div class="col-sm-4">
+                                                <mat-form-field>
+                                                    <mat-label>Product</mat-label>
+                                                    <input matInput type="text" formControlName="productcode" readonly>
+                                                </mat-form-field>
+                                                <!-- <mat-form-field class="example-full-width">
+                                                    <mat-label>Product</mat-label>
+                                                    <mat-select formControlName="productcode" [(ngModel)]="productObj"
+                                                        (selectionChange)="gettypeofCard()" disabled>
+                                                        <mat-option *ngFor="let product of productlist"
+                                                            [value]="product">
+                                                            {{ product.productCode }} - {{ product.productDesc }}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                </mat-form-field> -->
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <mat-form-field>
+                                                    <mat-label>Limit Based On</mat-label>
+                                                    <input matInput type="text" formControlName="limitBaseOn" readonly>
+                                                </mat-form-field>
+                                                <!-- <mat-form-field>
+                                                    <mat-label>Limit Based On</mat-label>
+                                                    <mat-select formControlName="limitBaseOn" disabled>
+                                                        <mat-option value="CT">Card Type</mat-option>
+                                                        <mat-option value="AT">Account Type</mat-option>
+                                                    </mat-select>
+                                                </mat-form-field> -->
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <mat-form-field>
+                                                    <mat-label>Type of Card</mat-label>
+                                                    <input matInput type="text" formControlName="typeofCard" readonly>
+                                                </mat-form-field>
+                                                <!-- <mat-form-field class="example-full-width">
+                                                    <mat-label>Type of Card</mat-label>
+                                                    <mat-select formControlName="typeofCard"
+                                                        (selectionChange)="getFee(cardData)" disabled>
+                                                        <mat-option *ngFor="let cardType of cardtypeList"
+                                                            [value]="cardType">{{cardType.typeofCard}} -
+                                                            {{cardType.description}}</mat-option>
+                                                    </mat-select>
+                                                </mat-form-field> -->
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <mat-form-field>
+                                                    <mat-label>PIN Gen Method</mat-label>
+                                                    <input matInput type="text" formControlName="pingenMethod" readonly>
+                                                </mat-form-field>
+                                                <!-- <mat-form-field class="example-full-width">
+                                                    <mat-label>PIN Gen Method</mat-label>
+                                                    <mat-select formControlName="pingenMethod" disabled>
+                                                        <mat-option value="G">Green Pin</mat-option>
+                                                        <mat-option value="P">Pin Mailer</mat-option>
+                                                    </mat-select>
+                                                </mat-form-field> -->
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <!-- <mat-form-field>
+                                                    <mat-label>Fee</mat-label>
+                                                    <input matInput type="text" formControlName="feeCode" readonly>
+                                                </mat-form-field> -->
+                                                <mat-form-field class="example-full-width">
+                                                    <mat-label>Fee</mat-label>
+                                                    <mat-select formControlName="feeCode">
+                                                        <mat-option *ngFor="let fee of data" [value]="fee.schemeCode">
+                                                            {{ fee.schemeCode }} - {{ fee.schemeDescription }}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <mat-form-field>
+                                                    <mat-label>Chn_Mask</mat-label>
+                                                    <input matInput type="tel" formControlName="chnMask" readonly>
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                        <ng-template matStepLabel>Product Information</ng-template>
+                                        <div>
+                                            <button mat-button matStepperNext>Next</button>
+                                        </div>
+                                    </form>
+                                </mat-step>
+                                <mat-step>
+                                    <ng-template matStepLabel>Done</ng-template>
+                                    <p>Please review the details and click Submit to proceed</p>
+                                    <div>
+                                        <button mat-button matStepperPrevious>Back</button>
+                                        <button mat-button (click)="addcustomerEntry()">Submit</button>
+                                    </div>
+                                </mat-step>
+                            </mat-stepper>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

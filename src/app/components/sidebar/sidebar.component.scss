@@ -1,0 +1,31 @@
+.nav>.active>a {
+    background-color: #e72838;
+    color: white;
+}
+
+.colorclass {
+    font-size: 16px;
+    font-weight: 900;
+}
+
+.headerAlign {
+    padding-right: 18px;
+}
+
+.submenuAlign {
+    margin-right: 11px;
+}
+
+.nav-item .nav-link {
+    cursor: pointer;
+}
+
+.submenu-container {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.8s ease-in-out;
+}
+
+.submenu-container.show {
+    max-height: 500px;
+}

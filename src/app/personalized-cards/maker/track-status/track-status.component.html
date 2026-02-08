@@ -1,0 +1,330 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-custom-red">
+                        <div class="row">
+                            <div class="col-sm-9">
+                                <h4 class="card-title ">Personalized Card Lifecycle Tracker</h4>
+                            </div>
+                            <div class="col-sm-3">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body" style="margin-top: 20px;">
+                        <form>
+                            <div class="row mt-3">
+                                <div class="col-sm-3">
+                                    <mat-form-field class="example-full-width">
+                                        <mat-label>Filter Option</mat-label>
+                                        <mat-select [(ngModel)]="filtervalue" [ngModelOptions]="{ standalone: true }"
+                                            (selectionChange)="clearfilter()">
+                                            <mat-option value="product">Product</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-3" *ngIf="filtervalue === 'product'">
+                                    <mat-form-field class="example-full-width">
+                                        <mat-label>Select Product</mat-label>
+                                        <mat-select [(ngModel)]="productObj" [ngModelOptions]="{standalone: true}">
+                                            <mat-select-filter placeholder="Search" [displayMember]="'productCode'"
+                                                [array]="productlist" (filteredReturn)="filteredList1 = $event">
+                                            </mat-select-filter>
+                                            <mat-option *ngFor="let item of filteredList1" [value]="item">
+                                                {{ item.productCode }} - {{ item.productDesc }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-3">
+                                    <mat-form-field>
+                                        <mat-select placeholder="Branch" [(ngModel)]="branchObj"
+                                            [disabled]="isBranchDropdownDisabled" [ngModelOptions]="{standalone: true}">
+
+                                            <mat-select-filter placeholder="Search" [displayMember]="'branchCode'"
+                                                [array]="branchlist" (filteredReturn)="filteredList2 = $event">
+                                            </mat-select-filter>
+
+                                            <mat-option *ngFor="let item of filteredList2" [value]="item">
+                                                {{ item.branchCode }} - {{ item.branchName }}
+                                            </mat-option>
+
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-3 d-flex align-items-center">
+                                    <button mat-raised-button color="primary" class="ms-auto"
+                                        (click)="getFilterRecordList()" [disabled]="!isFilterValid()">
+                                        <mat-icon>view_list</mat-icon>&nbsp;Retrieve
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                        <br>
+                        <div class="row alignTable" *ngIf="showrecords">
+                            <div class="col-md-6">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Filter</mat-label>
+                                    <input (keyup)="applyFilter($event)" matInput placeholder="Ex.Customer Name" #input
+                                        maxlength="19">
+                                    <mat-icon matSuffix>search</mat-icon>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-12 mat-elevation-z12">
+                                <div class="table-container">
+                                    <mat-checkbox hidden [checked]="selection.hasValue() && isSelectedPage()">all in
+                                        this page</mat-checkbox>
+                                    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+                                        <ng-container matColumnDef="cardHolderNumber">
+                                            <th mat-header-cell *matHeaderCellDef> Card Holder Number </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.cardHolderNumber}} </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="customerId">
+                                            <th mat-header-cell *matHeaderCellDef> Customer Id </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.customerId}} </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="acctNo">
+                                            <th mat-header-cell *matHeaderCellDef> Account Number </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.acctNo}} </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="customerName">
+                                            <th mat-header-cell *matHeaderCellDef>Customer Name</th>
+                                            <td mat-cell *matCellDef="let element"> {{element.customerName}} </td>
+
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="cardregUser">
+                                            <th mat-header-cell *matHeaderCellDef>Card Reg User</th>
+                                            <td mat-cell *matCellDef="let element"> {{element.cardregUser}} </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="cardregDate">
+                                            <th mat-header-cell *matHeaderCellDef>Card Reg Date</th>
+                                            <td mat-cell *matCellDef="let element"> {{element.cardregDate}} </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="cardAuthrejUser">
+                                            <th mat-header-cell *matHeaderCellDef>Card Auth/Rej User</th>
+                                            <td mat-cell *matCellDef="let element"> {{element.cardAuthrejUser}} </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="cardAuthrejDate">
+                                            <th mat-header-cell *matHeaderCellDef>Card Auth/Rej Date</th>
+                                            <td mat-cell *matCellDef="let element"> {{element.cardAuthrejDate}} </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="cardregStatus">
+                                            <th mat-header-cell *matHeaderCellDef>Card Reg Status</th>
+                                            <td mat-cell *matCellDef="let element">
+                                                <span [ngClass]="getStatusClass(element.cardregStatus)">
+                                                    {{ element.cardregStatus }}
+                                                </span>
+                                            </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="CVVGenUser">
+                                            <th mat-header-cell *matHeaderCellDef>CVV Gen User</th>
+                                            <td mat-cell *matCellDef="let element"> {{element.CVVGenUser}} </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="CVVGenDate">
+                                            <th mat-header-cell *matHeaderCellDef>CVV Gen Date</th>
+                                            <td mat-cell *matCellDef="let element"> {{element.CVVGenDate}} </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="CVVAuthrejUser">
+                                            <th mat-header-cell *matHeaderCellDef>CVV Auth/Rej User</th>
+                                            <td mat-cell *matCellDef="let element"> {{element.CVVAuthrejUser}} </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="CVVAuthrejDate">
+                                            <th mat-header-cell *matHeaderCellDef>CVV Auth/Rej Date</th>
+                                            <td mat-cell *matCellDef="let element"> {{element.CVVAuthrejDate}} </td>
+                                        </ng-container>
+
+                                        <!-- <ng-container matColumnDef="CVVGenStatus">
+                                            <th mat-header-cell *matHeaderCellDef>CVV Gen Status</th>
+                                            <td mat-cell *matCellDef="let element"> {{element.CVVGenStatus}} </td>
+                                        </ng-container> -->
+
+                                        <ng-container matColumnDef="CVVGenStatus">
+                                            <th mat-header-cell *matHeaderCellDef>CVV Gen Status</th>
+                                            <td mat-cell *matCellDef="let element">
+                                                <span [ngClass]="getStatusClass(element.CVVGenStatus)">
+                                                    {{ element.CVVGenStatus }}
+                                                </span>
+                                            </td>
+                                        </ng-container>
+
+
+
+                                        <ng-container matColumnDef="embGenUser">
+                                            <th mat-header-cell *matHeaderCellDef>Emb Gen User</th>
+                                            <td mat-cell *matCellDef="let element"> {{element.embGenUser}} </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="embGenDate">
+                                            <th mat-header-cell *matHeaderCellDef>Emb Gen Date</th>
+                                            <td mat-cell *matCellDef="let element"> {{element.embGenDate}} </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="embAuthrejUser">
+                                            <th mat-header-cell *matHeaderCellDef>Emb Auth/Rej User</th>
+                                            <td mat-cell *matCellDef="let element"> {{element.embAuthrejUser}} </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="embAuthrejDate">
+                                            <th mat-header-cell *matHeaderCellDef>Emb Auth/Rej Date</th>
+                                            <td mat-cell *matCellDef="let element"> {{element.embAuthrejDate}} </td>
+                                        </ng-container>
+
+                                        <!-- <ng-container matColumnDef="embGenStatus">
+                                            <th mat-header-cell *matHeaderCellDef>Emb Gen Status</th>
+                                            <td mat-cell *matCellDef="let element">
+                                                <span [ngClass]="getStatusClass(element.embGenStatus)">{{element.embGenStatus}} </span>  </td>
+                                        </ng-container> -->
+
+
+                                        <ng-container matColumnDef="embGenStatus">
+                                            <th mat-header-cell *matHeaderCellDef>Emb Gen Status</th>
+                                            <td mat-cell *matCellDef="let element">
+                                                <span [ngClass]="getStatusClass(element.embGenStatus)">
+                                                    {{ element.embGenStatus }}
+                                                </span>
+                                            </td>
+                                        </ng-container>
+
+
+                                        <ng-container matColumnDef="embFileDownUser">
+                                            <th mat-header-cell *matHeaderCellDef>Emb File Down User</th>
+                                            <td mat-cell *matCellDef="let element"> {{element.embFileDownUser}} </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="embFileDownDate">
+                                            <th mat-header-cell *matHeaderCellDef>Emb File Down Date</th>
+                                            <td mat-cell *matCellDef="let element"> {{element.embFileDownDate}} </td>
+                                        </ng-container>
+
+                                        <!-- <ng-container matColumnDef="embFileDownStatus">
+                                            <th mat-header-cell *matHeaderCellDef>Emb File Down Status</th>
+                                            <td mat-cell *matCellDef="let element"> 
+                                                <span [ngClass]="getStatusClass(element.embFileDownStatus)">
+                                                {{element.embFileDownStatus}} </span> </td>
+                                        </ng-container> -->
+
+
+
+                                        <ng-container matColumnDef="embFileDownStatus">
+                                            <th mat-header-cell *matHeaderCellDef>Emb File Down Status</th>
+                                            <td mat-cell *matCellDef="let element">
+                                                <span [ngClass]="getStatusClass(element.embFileDownStatus)">
+                                                    {{ element.embFileDownStatus }}
+                                                </span>
+                                            </td>
+                                        </ng-container>
+
+
+
+                                        <ng-container matColumnDef="reccardUser">
+                                            <th mat-header-cell *matHeaderCellDef>Rec Card User</th>
+                                            <td mat-cell *matCellDef="let element"> {{element.reccardUser}} </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="reccardDate">
+                                            <th mat-header-cell *matHeaderCellDef>Rec Card Date</th>
+                                            <td mat-cell *matCellDef="let element"> {{element.reccardDate}} </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="recAuthrejUser">
+                                            <th mat-header-cell *matHeaderCellDef>Rec Auth/Rej User</th>
+                                            <td mat-cell *matCellDef="let element"> {{element.recAuthrejUser}} </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="recAuthrejDate">
+                                            <th mat-header-cell *matHeaderCellDef>Rec Auth/Rej Date</th>
+                                            <td mat-cell *matCellDef="let element"> {{element.recAuthrejDate}} </td>
+                                        </ng-container>
+                                        <!-- 
+                                        <ng-container matColumnDef="reccardStatus">
+                                            <th mat-header-cell *matHeaderCellDef>Rec Card Status</th>
+                                            <td mat-cell *matCellDef="let element"> 
+                                                <span [ngClass]="getStatusClass(element.reccardStatus)">
+                                                {{element.reccardStatus}} </span></td>
+                                        </ng-container> -->
+
+                                        <ng-container matColumnDef="reccardStatus">
+                                            <th mat-header-cell *matHeaderCellDef>Rec Card Status</th>
+                                            <td mat-cell *matCellDef="let element">
+                                                <span [ngClass]="getStatusClass(element.reccardStatus)">
+                                                    {{ element.reccardStatus}}
+                                                </span>
+                                            </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="isscardUser">
+                                            <th mat-header-cell *matHeaderCellDef> Iss Card User</th>
+                                            <td mat-cell *matCellDef="let element"> {{element.isscardUser}} </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="isscardDate">
+                                            <th mat-header-cell *matHeaderCellDef> Iss Card Date</th>
+                                            <td mat-cell *matCellDef="let element"> {{element.isscardDate}} </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="issAuthrejUser">
+                                            <th mat-header-cell *matHeaderCellDef> Iss Auth/Rej User</th>
+                                            <td mat-cell *matCellDef="let element"> {{element.issAuthrejUser}} </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="issAuthrejDate">
+                                            <th mat-header-cell *matHeaderCellDef> Iss Auth/Rej Date</th>
+                                            <td mat-cell *matCellDef="let element"> {{element.issAuthrejDate}} </td>
+                                        </ng-container>
+
+                                        <!-- <ng-container matColumnDef="isscardStatus">
+                                            <th mat-header-cell *matHeaderCellDef>Iss Card Status</th>
+                                            <td mat-cell *matCellDef="let element"> 
+                                                <span [ngClass]="getStatusClass(element.reccardStatus)">{{element.isscardStatus}}</span>
+                                            </td>
+                                        </ng-container> -->
+
+
+                                        <ng-container matColumnDef="isscardStatus">
+                                            <th mat-header-cell *matHeaderCellDef>Iss Card Status</th>
+                                            <td mat-cell *matCellDef="let element">
+                                                <span [ngClass]="getStatusClass(element.isscardStatus)">
+                                                    {{ element.isscardStatus }}
+                                                </span>
+                                            </td>
+                                        </ng-container>
+
+                                        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                                        <tr class="mat-row" *matNoDataRow>
+                                            <td class="mat-cell" colspan="9">No Records Found !!!!
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <mat-paginator [pageSizeOptions]="[50,100,500,1000,2000]" showFirstLastButtons
+                                    aria-label="Select page of periodic elements">
+                                </mat-paginator>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row" *ngIf="showrecords && data.length!=0">
+                            <div class="col-sm-4">
+                                <h5 style="font-weight: 900;">Total No. of Cards - {{data.length}}</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

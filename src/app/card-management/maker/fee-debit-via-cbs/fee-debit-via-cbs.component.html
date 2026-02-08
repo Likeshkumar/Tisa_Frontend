@@ -1,0 +1,219 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-custom-red">
+                        <div class="row">
+                            <div class="col-sm-9">
+                                <h4 class="card-title">Debit Fee From CBS</h4>
+                            </div>
+                            <div class="col-sm-3">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-body" style="margin-top: 20px;">
+                        <form>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>From Date</mat-label>
+                                        <input matInput [matDatepicker]="fromDatePicker" [(ngModel)]="fromDate"
+                                            [ngModelOptions]="{standalone: true}" [max]="today" readonly
+                                            (dateChange)="onFromDateChange($event)">
+                                        <mat-hint>MM/DD/YYYY</mat-hint>
+                                        <mat-datepicker-toggle matSuffix [for]="fromDatePicker"></mat-datepicker-toggle>
+                                        <mat-datepicker #fromDatePicker></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-3">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>To Date</mat-label>
+                                        <input matInput [matDatepicker]="toDatePicker" [(ngModel)]="toDate" readonly
+                                            [ngModelOptions]="{standalone: true}" [min]="fromDate" [max]="today">
+                                        <mat-hint>MM/DD/YYYY</mat-hint>
+                                        <mat-datepicker-toggle matSuffix [for]="toDatePicker"></mat-datepicker-toggle>
+                                        <mat-datepicker #toDatePicker></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-3">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Branch</mat-label>
+                                        <mat-select [(ngModel)]="branchcode" name="branchcode"
+                                            [ngModelOptions]="{standalone: true}">
+                                            <mat-option *ngFor="let branch of branchList" [value]="branch">
+                                                {{ branch.branchCode }} - {{ branch.branchName }}
+                                            </mat-option>
+                                            <mat-option *ngIf="branchList?.length === 0">No Records Found</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-sm-3">
+                                    <mat-form-field class="example-full-width">
+                                        <mat-label>Filter option</mat-label>
+                                        <mat-select [(ngModel)]="filtervalue" [ngModelOptions]="{standalone: true}"
+                                            (click)="clearfilter()" (change)="clearfilter()">
+                                            <mat-option value="newCardFee">
+                                                New Card Fee
+                                            </mat-option>
+                                            <mat-option value="repinFee">
+                                                RE-PIN Fee
+                                            </mat-option>
+                                            <mat-option value="renewalFee">
+                                                Renewal Fee
+                                            </mat-option>
+                                            <mat-option value="replacementFee">
+                                                Replacement Fee
+                                            </mat-option>
+                                            <mat-option value="resetPinRetryFee">
+                                                Reset PIN Retry Fee
+                                            </mat-option>
+                                            <mat-option value="SecondaryAccountLinkFee">
+                                                Secondary Account Link Fee
+                                            </mat-option>
+                                            <mat-option value="cardBlockFee">
+                                                Card Block Fee
+                                            </mat-option>
+                                            <mat-option value="cardUnblockFee">
+                                                Card Unblock Fee
+                                            </mat-option>
+                                            <mat-option value="cardCloseFee">
+                                                Card Close Fee
+                                            </mat-option>
+                                            <mat-option value="anniversaryFee">
+                                                Anniversary Fee
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-2">
+                                    <button mat-raised-button color="primary" style="margin-left: 100px;"
+                                        (click)="getFilterRecordList()" [disabled]="!isFilterValid()">
+                                        <mat-icon>view_list</mat-icon>&nbsp;Retrieve
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+
+                        <div class="row alignTable" *ngIf="showrecords">
+                            <div class="col-lg-6">
+                                <h5 class="headerWeight">Total selected: {{selection?.selected?.length}}</h5>
+                            </div>
+                            <div class="col-md-6">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Filter</mat-label>
+                                    <input (keyup)="applyFilter($event)" matInput placeholder="Ex.Customer Name" #input>
+                                    <mat-icon matSuffix>search</mat-icon>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-12 mat-elevation-z12">
+                                <div class="example-container">
+                                    <mat-checkbox hidden [checked]="selection.hasValue() && isSelectedPage()">all in
+                                        this page</mat-checkbox>
+                                    <table mat-table [dataSource]="dataSource">
+                                        <ng-container matColumnDef="select">
+                                            <th mat-header-cell *matHeaderCellDef><mat-checkbox
+                                                    (change)="$event ? masterToggle($event) : null"
+                                                    [checked]="selection.hasValue() && isEntirePageSelected()"
+                                                    [indeterminate]="selection.hasValue() && !isEntirePageSelected()"
+                                                    [aria-label]="checkboxLabel()"></mat-checkbox></th>
+
+                                            <td mat-cell *matCellDef="let row">
+                                                <mat-checkbox (click)="$event.stopPropagation()"
+                                                    (change)="$event ? selection.toggle(row) : null"
+                                                    [checked]="selection.isSelected(row)"
+                                                    [aria-label]="checkboxLabel(row)">
+                                                </mat-checkbox>
+                                            </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="cardNo">
+                                            <th mat-header-cell *matHeaderCellDef> Mask CardNo </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.cardNo}} </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="accountNumber">
+                                            <th mat-header-cell *matHeaderCellDef> Account Number </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.accountNumber}} </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="customerId">
+                                            <th mat-header-cell *matHeaderCellDef> Customer Id </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.customerId}} </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="branchCode">
+                                            <th mat-header-cell *matHeaderCellDef> Branch Code </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.branchCode}} </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="glAccount">
+                                            <th mat-header-cell *matHeaderCellDef> GL Account </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.glAccount}} </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="feeAmount">
+                                            <th mat-header-cell *matHeaderCellDef> Fee Amount </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.feeAmount}} </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="taxAmount">
+                                            <th mat-header-cell *matHeaderCellDef> Tax Amount </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.taxAmount}} </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="accountClassues">
+                                            <th mat-header-cell *matHeaderCellDef> Account Classues </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.accountClassues}} </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="periodicity">
+                                            <th mat-header-cell *matHeaderCellDef> Periodicity </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.periodicity}} </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="action">
+                                            <th mat-header-cell *matHeaderCellDef> Action Description </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.action}} </td>
+                                        </ng-container>
+
+                                        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                                        <tr class="mat-row" *matNoDataRow>
+                                            <td class="mat-cell" colspan="6">No Records Found!!!!!</td>
+                                        </tr>
+
+                                    </table>
+
+                                    <mat-paginator [pageSizeOptions]="[50,100,500,1000,2000]" showFirstLastButtons
+                                        aria-label="Select page of periodic elements">
+                                    </mat-paginator>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <br>
+                        <div class="row" *ngIf="showrecords && data.length!=0">
+                            <div class="col-sm-4">
+                                <h5 style="font-weight: 900;">Total No. of Cards - {{data.length}}</h5>
+                            </div>
+                        </div>
+                        <div class="submitbuttoncontainer" *ngIf="showrecords && data.length!=0">
+                            <div class="row d-flex justify-content-center align-items-center">
+                                <button mat-raised-button color="primary" (click)="issueCard()">
+                                    <mat-icon>check_circle_outline</mat-icon>&nbsp;Debit&nbsp;
+                                </button>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button mat-raised-button color="accent" (click)="cancelinstant()">
+                                    <mat-icon>highlight_off</mat-icon>&nbsp;Cancel&nbsp;
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

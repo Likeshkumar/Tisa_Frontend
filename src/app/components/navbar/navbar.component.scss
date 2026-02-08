@@ -1,0 +1,30 @@
+.logout-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none; 
+    padding: 10px; 
+    color: transparent; 
+    transition: color 0.3s; 
+}
+
+.logout-link:hover .logout-text {
+    color: #000;
+}
+
+.logout-link:hover {
+    color: #f00; 
+    background-color: rgba(0, 0, 0, 0.1); 
+    border-radius: 5px;
+}
+
+.logout-text {
+    margin-left: 5px; 
+    visibility: hidden; 
+    opacity: 0;
+    transition: visibility 0s, opacity 0.3s linear;
+}
+
+.logout-link:hover .logout-text {
+    visibility: visible; 
+    opacity: 1;
+}

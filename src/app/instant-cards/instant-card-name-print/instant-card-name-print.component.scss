@@ -1,0 +1,156 @@
+input[type="text"] {
+    color: white !important;
+}
+
+.form-control,
+.is-focused .form-control {
+    background-image: linear-gradient(to top, #fff 2px, rgba(156, 39, 176, 0) 2px), linear-gradient(to top, #d2d2d2 1px, rgba(210, 210, 210, 0) 1px);
+}
+
+
+.material-icons.md-18 {
+    font-size: 12px;
+}
+
+.mat-raised-button .fetchData {
+    background-color: darkcyan;
+}
+
+table {
+    width: 100%;
+}
+
+.card-header-custom-red {
+    background-color: #e72838;
+    color: #fff;
+}
+
+.mat-header-cell {
+    font-size: 16px;
+    font-weight: 900;
+    color: mediumvioletred;
+    text-align: center;
+}
+
+.mat-cell {
+    font-weight: 700;
+    font-size: 14px;
+    text-align: center;
+}
+
+.headerWeight {
+    font-weight: 900;
+    margin-top: 20px;
+}
+
+.example-container {
+    height: 250px;
+    overflow: auto;
+}
+
+.alignTable {
+    margin-top: -15px;
+}
+
+tr.mat-row,
+tr.mat-footer-row {
+    height: 40px;
+}
+
+tr.mat-header-row {
+    height: 40px;
+}
+
+.radio-spacing {
+    margin-right: 15px;
+    margin-bottom: 15px;
+}
+
+.alignment-container {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+}
+
+.alignment-preview {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-preview {
+    width: 330px;
+    height: 210px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.name-preview {
+    position: absolute;
+    white-space: nowrap;
+    font-weight: bold;
+}
+
+.alignment-controls {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.alignment-sliders {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.submitbuttoncontainer {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.alignment-sliders {
+    width: 100%;
+
+    .slider-control {
+        margin-bottom: 20px;
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+
+            mat-slider {
+                flex-grow: 1;
+            }
+
+            .numeric-input {
+                width: 80px;
+
+                input {
+                    text-align: center;
+                }
+            }
+
+            .unit {
+                width: 30px;
+            }
+        }
+    }
+}
+
+
+

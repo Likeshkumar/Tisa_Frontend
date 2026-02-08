@@ -1,0 +1,121 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-custom-red">
+                        <div class="row">
+                            <div class="col-sm-9">
+                                <h4 class="card-title">Renewal Card Report</h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-body" style="margin-top: 30px;">
+                        <form [formGroup]="firstFormGroup">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <mat-form-field class="example-full-width">
+                                        <mat-label>Product Code</mat-label>
+                                        <mat-select formControlName="productcode">
+                                            <mat-option *ngFor="let product of productlist"
+                                                [value]="product.productCode">
+                                                {{ product.productCode }} - {{ product.productDesc }}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="firstFormGroup.controls['productcode'].hasError('required')">
+                                            Product Code is required
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-3">
+                                    <mat-form-field class="example-full-width">
+                                        <mat-label>Branch Code</mat-label>
+                                        <mat-select formControlName="branchcode">
+                                            <mat-option *ngFor="let branch of branchlist" [value]="branch.branchCode">
+                                                {{ branch.branchCode }} - {{ branch.branchName }}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="firstFormGroup.controls['branchcode'].hasError('required')">
+                                            Branch Code is required
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-3">
+                                    <mat-form-field>
+                                        <mat-label>From Date</mat-label>
+                                        <input matInput [matDatepicker]="pickerFrom" [max]="today"
+                                            formControlName="fromdate" readonly>
+                                        <mat-hint>MM/DD/YYYY</mat-hint>
+                                        <mat-datepicker-toggle matSuffix [for]="pickerFrom"></mat-datepicker-toggle>
+                                        <mat-datepicker #pickerFrom></mat-datepicker>
+                                        <mat-error *ngIf="firstFormGroup.controls['fromdate'].hasError('required')">
+                                            From Date is required
+                                        </mat-error>
+                                        <mat-error *ngIf="firstFormGroup.controls['fromdate'].hasError('invalidDate')">
+                                            From Date must be in the past
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-3">
+                                    <mat-form-field>
+                                        <mat-label>To Date</mat-label>
+                                        <input matInput [matDatepicker]="pickerTo" [max]="today"
+                                            formControlName="todate" readonly>
+                                        <mat-hint>MM/DD/YYYY</mat-hint>
+                                        <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
+                                        <mat-datepicker #pickerTo></mat-datepicker>
+                                        <mat-error *ngIf="firstFormGroup.controls['todate'].hasError('required')">
+                                            To Date is required
+                                        </mat-error>
+                                        <mat-error *ngIf="firstFormGroup.controls['todate'].hasError('invalidDate')">
+                                            To Date must be in the past
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-3">
+                                    <mat-form-field class="example-full-width">
+                                        <mat-label>Select Process</mat-label>
+                                        <mat-select formControlName="process">
+                                            <mat-option value="Instant">Instant</mat-option>
+                                            <mat-option value="Personalised">Personalised</mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="firstFormGroup.controls['process'].hasError('required')">
+                                            Process selection is required
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-3">
+                                    <mat-form-field class="example-full-width">
+                                        <mat-label>Select Action</mat-label>
+                                        <mat-select formControlName="action">
+                                            <mat-option value="registration">Registration</mat-option>
+                                            <mat-option value="cvvGeneration">CVV Generation</mat-option>
+                                            <mat-option value="preGeneration">Pre Generation</mat-option>
+                                            <mat-option value="receiveCard">Receive Card</mat-option>
+                                            <mat-option value="issueCard">Issue Card</mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="firstFormGroup.controls['action'].hasError('required')">
+                                            Action selection is required
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-9">
+                                <button mat-raised-button color="primary" [disabled]="!firstFormGroup.valid"
+                                    style="margin-top: 20px; margin-left: 50px;">
+                                    PDF
+                                </button>
+                                <button mat-raised-button color="primary" [disabled]="!firstFormGroup.valid"
+                                    style="margin-top: 20px; margin-left: 50px;">
+                                    Excel
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

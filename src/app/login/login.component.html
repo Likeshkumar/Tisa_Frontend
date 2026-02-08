@@ -1,0 +1,143 @@
+<mat-sidenav-container hasBackdrop="false">
+
+    <mat-sidenav-content>
+        <div class="container">
+            <div class="d-flex flex-row vh-100 justify-content-center align-items-center">
+                <div class="col-sm-12 col-md-8 col-lg-6">
+                    <div class="d-flex flex-column flex-center align-items-center">
+                        
+                    </div>
+                    <mat-card *ngIf="!showlogin">
+                        <mat-card-header>
+                           
+                        </mat-card-header>
+
+                        <div class="login-header">
+                            <img src="assets/img/image.png" alt="NFC Bank Logo" class="logo" />
+
+                            <div class="title-section">
+                                <h1 class="title">
+                                    <span class="prefix">Welcome to</span>
+                                    <span class="brand-red">Star</span><span class="brand-gray">CARDMAN</span>
+                                </h1>
+                                <p class="tagline">Debit Card Management System</p>
+                                <br>
+
+                                <p class="secure-text">Please sign in with your credentials to securely access the
+                                    portal.</p>
+                            </div>
+                        </div>
+
+                        <mat-card-content>
+                            <form [formGroup]="adminloginForm" (ngSubmit)="loginsubmit()">
+                                <mat-form-field appearance="fill" class="column-fluid">
+                                    <mat-label>Username</mat-label>
+                                    <input matInput placeholder="Username" type="text" formControlName="auname"
+                                        autocomplete="new-password" minlength="5" maxlength="15" required>
+                                    <mat-icon matPrefix>account_circle</mat-icon>
+
+                                </mat-form-field>
+
+                                <mat-form-field appearance="fill" class="column-fluid">
+                                    <mat-label>Password</mat-label>
+                                    <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="apwd"
+                                        autocomplete="new-password" required minlength="12" maxlength="12" />
+                                    <mat-icon matPrefix>lock</mat-icon>
+                                    <button type="button" mat-icon-button matSuffix
+                                        (click)="hidePassword = !hidePassword"
+                                        [attr.aria-label]="'Toggle password visibility'"
+                                        [attr.aria-pressed]="!hidePassword">
+                                        <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                                    </button>
+                                </mat-form-field>
+
+                                <mat-form-field appearance="fill">
+                                    <mat-label>Institution</mat-label>
+                                    <mat-select formControlName="instid"
+                                        (selectionChange)="onInstitutionChange($event)">
+                                        <mat-option *ngFor="let inst of Instituionlist" [value]="inst.instName">
+                                            {{ inst.instName }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-icon matPrefix>account_balance</mat-icon>
+                                </mat-form-field>
+                                <div class="option_div">
+                                    <div class="forget_div">
+                                        <a [routerLink]="['/Request-Password']"
+                                            style="font-size: 15px; color: black;">Forgot password?</a>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-center" id="login">
+                                    <input type="submit" [disabled]="adminloginForm.invalid" value="Login">
+                                </div>
+                            </form>
+                        </mat-card-content>
+                    </mat-card>
+                    <mat-card class="forgot-password-card" *ngIf="showForgotPassword">
+                        <mat-card-title>Change Password</mat-card-title>
+                        <mat-card-content>
+                            <form [formGroup]="forgotPasswordForm" (ngSubmit)="newPasswordChange()">
+
+                                <mat-form-field appearance="outline" class="full-width">
+                                    <mat-label>New Password</mat-label>
+                                    <input matInput [type]="hidePassword ? 'password' : 'text'"
+                                        formControlName="newPassword" maxlength="12" (input)="checkPasswordStrength()">
+                                    <mat-icon matSuffix (click)="togglePasswordVisibility()">{{ hidePassword ?
+                                        'visibility_off' :
+                                        'visibility' }}</mat-icon>
+                                    <mat-error
+                                        *ngIf="forgotPasswordForm.get('newPassword')?.hasError('required')">Password is
+                                        required</mat-error>
+                                    <mat-error
+                                        *ngIf="forgotPasswordForm.get('newPassword')?.hasError('minlength')">Minimum 12
+                                        characters</mat-error>
+                                    <mat-error
+                                        *ngIf="forgotPasswordForm.get('newPassword')?.hasError('pattern')">Include
+                                        uppercase,
+                                        number & special character</mat-error>
+                                </mat-form-field>
+
+                                <div class="password-strength">
+                                    <div [class]="passwordStrengthClass">{{ passwordStrength }}</div>
+                                </div>
+
+                                <mat-form-field appearance="outline" class="full-width">
+                                    <mat-label>Confirm Password</mat-label>
+                                    <input matInput [type]="hideConfirmPassword ? 'password' : 'text'"
+                                        formControlName="confirmPassword" maxlength="12">
+                                    <mat-icon matSuffix (click)="toggleConfirmPasswordVisibility()">
+                                        {{ hideConfirmPassword ? 'visibility_off' : 'visibility' }}
+                                    </mat-icon>
+                                    <mat-error *ngIf="forgotPasswordForm.get('confirmPassword')?.hasError('required')">
+                                        Confirm Password is required
+                                    </mat-error>
+                                    <mat-error
+                                        *ngIf="forgotPasswordForm.get('confirmPassword')?.hasError('passwordMismatch')">
+                                        Passwords do not match
+                                    </mat-error>
+
+                                </mat-form-field>
+
+                                <div class="d-flex justify-content-center" id="reset-password">
+                                    <button mat-raised-button color="primary" class="reset-password-btn"
+                                        [disabled]="forgotPasswordForm.invalid">Reset Password</button>
+                                </div>
+
+                            </form>
+                        </mat-card-content>
+                    </mat-card>
+                   
+                    <div class="d-flex justify-content-start align-items-start mt-2" style="color: rgb(10, 10, 10);">
+                        <img src="assets/img/cgs.png" alt="CashLink Global Systems Logo" class="cashlink-footer-logo"
+                            style="height: 40px; margin-right: 10px;">
+
+                        <div class="text-start" style="font-size: 0.85em;">
+                            <div>Powered by <b>CashLink Global Systems Pvt. Ltd.</b> | Version 10.0.0.1</div>
+                            <div>© 2025 All Rights Reserved</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </mat-sidenav-content>
+</mat-sidenav-container>

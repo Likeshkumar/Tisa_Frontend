@@ -1,0 +1,132 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-custom-red">
+                        <div class="row">
+                            <div class="col-sm-9">
+                                <h4 class="card-title">Instant Card Order</h4>
+                                <p class="card-category"></p>
+                            </div>
+                            <div class="col-sm-3">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body" style="margin-top: 30px;">
+                        <form [formGroup]="cardOrderForm">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <mat-form-field class="example-full-width">
+                                        <mat-label>Product Code</mat-label>
+                                        <mat-select formControlName="productcode" [(ngModel)]="productObj"
+                                            (selectionChange)="gettypeofCard()">
+                                            <mat-option *ngFor="let product of productlist" [value]="product">
+                                                {{ product.productCode }} - {{ product.productDesc }}
+                                            </mat-option>
+                                            <mat-option *ngIf="productlist?.length === 0">No Records
+                                                Found</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <!-- <mat-form-field>
+                                        <mat-select placeholder="Product" formControlName="productcode"
+                                            [(ngModel)]="productObj" (selectionChange)="gettypeofCard()">
+                                            <mat-select-filter placeholder="Search" [displayMember]="'productCode'"
+                                                [array]="productlist"
+                                                (filteredReturn)="filteredList1 =$event"></mat-select-filter>
+                                            <mat-option *ngFor="let item of filteredList1" [value]="item">
+                                                {{item.productCode}} - {{item.productDesc}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field> -->
+                                </div>
+                                <div class="col-sm-4">
+                                    <mat-form-field class="example-full-width">
+                                        <mat-label>Branch</mat-label>
+                                        <mat-select formControlName="branchcode">
+                                            <mat-option *ngFor="let branch of branchlist"
+                                                [value]="branch">{{branch.branchCode }} - {{branch.branchName}}
+                                            </mat-option>
+                                            <mat-option *ngIf="branchlist?.length === 0">No Records
+                                                Found</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <!-- <mat-form-field>
+                                        <mat-select placeholder="Branch" formControlName="branchObj">
+                                            <mat-select-filter placeholder="Search" [displayMember]="'branchCode'"
+                                                [array]="branchlist"
+                                                (filteredReturn)="filteredList2 =$event"></mat-select-filter>
+                                            <mat-option *ngFor="let item of filteredList2" [value]="item">
+                                                {{item.branchCode}} - {{item.branchName}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field> -->
+                                </div>
+                                <div class="col-sm-4">
+                                    <mat-form-field>
+                                        <mat-label>Limit Based On</mat-label>
+                                        <mat-select formControlName="limitBaseOn">
+                                            <mat-option value="CT">Card Type</mat-option>
+                                            <!-- <mat-option value="AT">Account Type</mat-option>
+                                            <mat-option value="IN">Individual</mat-option> -->
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-4">
+                                    <mat-form-field class="example-full-width">
+                                        <mat-label>Type of Card</mat-label>
+                                        <mat-select formControlName="typeofCard">
+                                            <mat-option *ngFor="let cardType of cardtypeList"
+                                                [value]="cardType">{{cardType.typeofCard}} -
+                                                {{cardType.description}}</mat-option>
+                                            <mat-option *ngIf="cardtypeList?.length === 0">No Records
+                                                Found</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <!-- <mat-form-field class="example-full-width">
+                                        <mat-label>Type of Card</mat-label>
+                                        <mat-select name="cardtype" formControlName="cardtype">
+                                            <mat-option *ngFor="let cardType of cardtypeList"
+                                                [value]="cardType">{{cardType}}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field> -->
+                                </div>
+                                <div class="col-sm-4">
+                                    <mat-form-field class="example-full-width">
+                                        <mat-label>Pin Generation Method</mat-label>
+                                        <mat-select formControlName="pinMethod">
+                                            <mat-option value="G">GreenPin</mat-option>
+                                            <!-- <mat-option value="N">Pin Mailer</mat-option> -->
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-4">
+                                    <mat-form-field>
+                                        <mat-label>Generate No. of Cards</mat-label>
+                                        <input matInput formControlName="noofcards" minlength="1" maxlength="4">
+                                        <mat-error *ngIf="cardOrderForm.get('noofcards').hasError('pattern')">
+                                            Only Numbers are allowed
+                                        </mat-error>
+                                        <mat-error *ngIf="cardOrderForm.controls['noofcards'].hasError('min')">
+                                            No of Cards must be at least 1.
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row d-flex justify-content-center align-items-center">
+                                <button mat-raised-button color="primary" (click)="registerInstantCard()"
+                                    [disabled]="cardOrderForm.invalid">
+                                    <mat-icon>check_circle_outline</mat-icon>&nbsp;Generate&nbsp;
+                                </button>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button mat-raised-button color="warn" (click)="clear()">
+                                    <mat-icon>highlight_off</mat-icon>&nbsp;Cancel&nbsp;
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

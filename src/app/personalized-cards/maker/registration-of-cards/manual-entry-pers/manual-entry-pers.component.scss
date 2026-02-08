@@ -1,0 +1,47 @@
+input[type="text"] {
+    color: white !important;
+}
+
+.form-control,
+.is-focused .form-control {
+    background-image: linear-gradient(to top, #fff 2px, rgba(156, 39, 176, 0) 2px), linear-gradient(to top, #d2d2d2 1px, rgba(210, 210, 210, 0) 1px);
+}
+
+
+.material-icons.md-18 {
+    font-size: 12px;
+}
+
+.mat-raised-button .fetchData {
+    background-color: darkcyan;
+}
+
+table {
+    width: 100%;
+}
+
+
+
+.mat-header-cell {
+    font-size: 12px;
+    font-weight: 900;
+    color: mediumvioletred;
+    text-align: center;
+    width: 200px;
+}
+
+.mat-cell {
+    font-weight: 700;
+    font-size: 10px;
+    text-align: center;
+}
+
+.headerWeight {
+    font-weight: 900;
+    text-align: center;
+}
+
+.card-header-custom-red {
+    background-color: #e72838;
+    color: #fff;
+}

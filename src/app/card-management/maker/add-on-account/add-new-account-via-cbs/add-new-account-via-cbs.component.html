@@ -1,0 +1,127 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-custom-red">
+                        <div class="row">
+                            <div class="col-sm-9">
+                                <h4 class="card-title">Add On Account via CBS</h4>
+                            </div>
+                            <div class="col-sm-3"></div>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-xs-12 col-md-6">
+                                <mat-form-field appearance="fill">
+                                    <mat-label>Card No</mat-label>
+                                    <input matInput [(ngModel)]="cardNo" name="cardNo" minlength="16" maxlength="19"
+                                        required pattern="^\d{16,19}$" #cardNoInput="ngModel" />
+                                    <mat-error *ngIf="cardNoInput.hasError('required')">Card No is required.</mat-error>
+                                    <mat-error *ngIf="cardNoInput.invalid">
+                                        Card No must be 16-19 digits long and numeric.
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col-xs-12 col-md-6">
+                                <button mat-raised-button color="primary" style="margin-top: 20px; margin-left: 50px;"
+                                    [disabled]="!cardNoInput.valid" (click)="retrieveCardDetails()">
+                                    Retrieve
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card" *ngIf="showcardDetails">
+                    <div class="card-header">
+                        <h2 class="card-title text-center">Primary Account Details</h2>
+                        <hr />
+                    </div>
+
+                    <div class="card-body">
+                        <table class="table table-bordered" *ngIf="existingAccounts?.length > 0">
+                            <thead>
+                                <tr>
+                                    <th>Account Number</th>
+                                    <th>Account Type</th>
+                                    <th>Account Sub Type</th>
+                                    <th>Currency</th>
+                                    <th>Account Priority</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let account of existingAccounts">
+                                    <td>{{ account.accountNumber }}</td>
+                                    <td>{{ account.acctCode }} - {{ account.acctType }}</td>
+                                    <td>{{ account.subAcctType }} - {{ account.subAcctDesc }}</td>
+                                    <td>{{ account.currencyCode }} - {{ account.currency }}</td>
+                                    <td>{{ account.accountPriority }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card" *ngIf="showNewAccountInput">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-xs-12 col-md-6">
+                                <mat-form-field appearance="fill">
+                                    <mat-label>Account Number</mat-label>
+                                    <input matInput [(ngModel)]="accountNo" name="accountNo" minlength="16"
+                                        maxlength="16" required pattern="^\d{16}$" #accountNoInput="ngModel" />
+                                    <mat-error *ngIf="accountNoInput.hasError('required')">Account No is
+                                        required.</mat-error>
+                                    <mat-error *ngIf="accountNoInput.invalid">
+                                        Account No must be 16 digits long and numeric.
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col-xs-12 col-md-6">
+                                <button mat-raised-button color="primary" style="margin-top: 20px; margin-left: 50px;"
+                                    [disabled]="!accountNoInput.valid" (click)="retrieveNewAccount()">
+                                    Retrieve
+                                </button>
+                            </div>
+                        </div>
+                        <div *ngIf="newAccountDetails?.length > 0">
+                            <div class="card-header">
+                                <h2 class="card-title text-center">Secondary Account Details</h2>
+                                <hr />
+                            </div>
+
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Account Number</th>
+                                        <th>Account Type</th>
+                                        <th>Account Sub Type</th>
+                                        <th>Currency</th>
+                                        <th>Account Priority</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let account of newAccountDetails">
+                                        <td>{{ account.accountNumber }}</td>
+                                        <td>{{ account.acctCode }} - {{ account.acctType }}</td>
+                                        <td>{{ account.subAcctType }} - {{ account.subAcctDesc }}</td>
+                                        <td>{{ account.currencyCode }} - {{ account.currency }}</td>
+                                        <td>{{ account.accountPriority }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center" *ngIf="canSubmit">
+                        <button mat-raised-button color="primary" (click)="addOnAccount()">Submit</button>
+                        <button mat-raised-button color="warn" style="margin-left: 20px;"
+                            (click)="cancelAddOnAccount()">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

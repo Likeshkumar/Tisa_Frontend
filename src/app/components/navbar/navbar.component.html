@@ -1,0 +1,23 @@
+<nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top">
+    <div class="container-fluid">
+        <p style="font-size: 15px; letter-spacing: 1px; font-weight: bold; margin-left: 50px;">
+            👋 Welcome {{ data?.username }} | Last Login: {{ data?.logindate }}
+        </p>
+        <div class="collapse navbar-collapse justify-content-end" id="navigation">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link logout-link" [routerLink]="'/layout/Dashboard'">
+                        <i class="material-icons">home</i>
+                        <span class="logout-text">home</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link logout-link" href="javascript:void(0)" (click)="logout()">
+                        <i class="material-icons">logout</i>
+                        <span class="logout-text">Logout</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

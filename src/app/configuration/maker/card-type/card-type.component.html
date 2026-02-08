@@ -1,0 +1,261 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-custom-red">
+                        <div class="row">
+                            <div class="col-sm-9">
+                                <h4 class="card-title">Card Type Configuration</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body" *ngIf="mode==='L'">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <button mat-raised-button color="primary" class="btn" (click)="clickAdd()">
+                                    <mat-icon>add</mat-icon>Add New Card Type</button>
+                            </div>
+                            <div class="col-sm-5">
+                            </div>
+                            <div class="col-sm-3">
+                                <mat-form-field class="full-width">
+                                    <mat-label>Search</mat-label>
+                                    <input matInput (keyup)="applyFilter($event)" placeholder="Ex Username" #input>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="col-md-12 mat-elevation-z12" *ngIf="showrecords">
+                            <div class="example-container">
+                                <table mat-table [dataSource]="dataSource">
+
+                                    <ng-container matColumnDef="sno">
+                                        <th mat-header-cell *matHeaderCellDef>Sl No</th>
+                                        <td mat-cell *matCellDef="let row;let i = index"> {{i+1}} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="typeOfCard">
+                                        <th mat-header-cell *matHeaderCellDef> Type of card</th>
+                                        <td mat-cell *matCellDef="let element"> {{element.typeOfCard}} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="description">
+                                        <th mat-header-cell *matHeaderCellDef>Card type Desc</th>
+                                        <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="action">
+                                        <th mat-header-cell *matHeaderCellDef>Action</th>
+                                        <td mat-cell *matCellDef="let element"> <button mat-icon-button
+                                                aria-label="View" color="primary" matTooltip='View'
+                                                (click)="onRowClick(element,'V')"><mat-icon>visibility</mat-icon></button>
+                                            <button mat-icon-button aria-label="Edit" color="text-secondary"
+                                                matTooltip='Edit' matTooltipClass="example-tooltip-red"
+                                                (click)="onRowClick(element,'E')"><mat-icon>edit_note</mat-icon></button>
+                                            <button mat-icon-button aria-label="Delete" color="accent"
+                                                matTooltip='Delete' matTooltipClass="example-tooltip-red"
+                                                (click)="deleteCardType(element)"><mat-icon>delete</mat-icon></button>
+                                        </td>
+                                    </ng-container>
+
+                                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                                    <tr class="mat-row" *matNoDataRow>
+                                        <td class="mat-cell" colspan="9">No Records Found !!!!
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <mat-paginator #paginatorRef [pageSizeOptions]="[5,10,15,20,50]" showFirstLastButtons
+                                aria-label="Select page of periodic elements">
+                            </mat-paginator>
+                        </div>
+
+                    </div>
+
+                    <div class="card-body" style="margin-top: 20px;margin-bottom: 50px;" *ngIf="mode!='L'">
+                        <form [formGroup]="cardTypeFromGroup">
+
+                            <div class="three-columns-grid">
+
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>Bin</mat-label>
+                                    <mat-select formControlName="productcode" [disabled]="mode=='V' || mode=='E'">
+                                        <mat-option *ngFor="let product of productlist" [value]="product.productCode">
+                                            {{ product.productCode }} - {{ product.productDesc }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error
+                                        *ngIf="cardTypeFromGroup.controls['productcode'].hasError('required') && cardTypeFromGroup.controls['productcode'].touched">
+                                        BIN is required.
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>Currency</mat-label>
+                                    <mat-select formControlName="currency" [disabled]="mode=='V'|| mode=='E'">
+                                        <mat-option *ngFor="let currency of currencylist"
+                                            [value]="currency.currencyCode">
+                                            {{ currency.currencyCode }} - {{ currency.currencyDesc }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error
+                                        *ngIf="cardTypeFromGroup.controls['currency'].hasError('required') && cardTypeFromGroup.controls['currency'].touched">
+                                        Currency is required.
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field>
+                                    <mat-label>Type Of Card</mat-label>
+                                    <input matInput placeholder="Type Of Card" formControlName="typeOfCard"
+                                        name="typeOfCard" maxlength="3" minlength="3"
+                                        [readonly]="mode=='V'|| mode=='E'">
+                                    <mat-error
+                                        *ngIf="cardTypeFromGroup.controls['typeOfCard'].hasError('required') && cardTypeFromGroup.controls['typeOfCard'].touched">
+                                        Type of Card is required.
+                                    </mat-error>
+                                    <mat-error
+                                        *ngIf="cardTypeFromGroup.controls['typeOfCard'].hasError('minlength') && cardTypeFromGroup.controls['typeOfCard'].touched">
+                                        Type of Card Minimum 3 digits required.
+                                    </mat-error>
+
+                                    <mat-error
+                                        *ngIf="cardTypeFromGroup.controls['typeOfCard'].hasError('maxlength') && cardTypeFromGroup.controls['typeOfCard'].touched">
+                                        Type of Card Maximum 3 digits allowed.
+                                    </mat-error>
+                                    <mat-error
+                                        *ngIf="cardTypeFromGroup.controls['typeOfCard'].hasError('pattern') && cardTypeFromGroup.controls['typeOfCard'].touched">
+                                        Only numeric values are allowed.
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field>
+                                    <mat-label>Description</mat-label>
+                                    <input matInput placeholder="Description" formControlName="description"
+                                        name="description" maxlength="25" [readonly]="mode=='V'">
+                                    <mat-error
+                                        *ngIf="cardTypeFromGroup.controls['description'].hasError('required') && cardTypeFromGroup.controls['description'].touched">
+                                        Description is required.
+                                    </mat-error>
+                                    <mat-error
+                                        *ngIf="cardTypeFromGroup.controls['description'].hasError('pattern') && cardTypeFromGroup.controls['description'].touched">
+                                        Only characters are allowed.
+                                    </mat-error>
+                                    <mat-error
+                                        *ngIf="cardTypeFromGroup.controls['description'].hasError('minlength') && cardTypeFromGroup.controls['description'].touched">
+                                        Minimum 4 characters required.
+                                    </mat-error>
+                                    <mat-error
+                                        *ngIf="cardTypeFromGroup.controls['description'].hasError('maxlength') && cardTypeFromGroup.controls['description'].touched">
+                                        Maximum 25 characters allowed.
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>TSF Mapping Value</mat-label>
+                                    <input matInput placeholder="TSF Mapping Value" formControlName="tsfMappingValue"
+                                        name="tsfMappingValue" maxlength="4" minlength="3" [readonly]="mode=='V'">
+                                    <mat-error
+                                        *ngIf="cardTypeFromGroup.controls['tsfMappingValue'].hasError('required') && cardTypeFromGroup.controls['tsfMappingValue'].touched">
+                                        TSF Mapping Value is required.
+                                    </mat-error>
+                                    <mat-error
+                                        *ngIf="cardTypeFromGroup.controls['tsfMappingValue'].hasError('pattern') && cardTypeFromGroup.controls['tsfMappingValue'].touched">
+                                        Only numeric values are allowed.
+                                    </mat-error>
+                                    <mat-error
+                                        *ngIf="cardTypeFromGroup.controls['tsfMappingValue'].hasError('minlength') && cardTypeFromGroup.controls['tsfMappingValue'].touched">
+                                        TSF Mapping Value Minimun 3 Digit.
+                                    </mat-error>
+                                    <mat-error
+                                        *ngIf="cardTypeFromGroup.controls['tsfMappingValue'].hasError('maxlength') && cardTypeFromGroup.controls['tsfMappingValue'].touched">
+                                        TSF Mapping Value cannot be more than 4 Digit.
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field>
+                                    <mat-label>Region </mat-label>
+                                    <mat-select formControlName="region" name="region" [disabled]="mode=='V'">
+                                        <mat-option value="dms">Domestic</mat-option>
+                                        <mat-option value="ins">International</mat-option>
+                                    </mat-select>
+                                    <mat-error
+                                        *ngIf="cardTypeFromGroup.controls['region'].hasError('required') && cardTypeFromGroup.controls['region'].touched">
+                                        Region is required.
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <h1>Configure your maximum limits for transactions here</h1>
+
+                            <div class="row1">
+                                <div class="col-sm-4">
+                                    <mat-form-field class="example-half-width">
+                                        <mat-label> Cumulative Maximum Amount</mat-label>
+                                        <input matInput placeholder="Enter Amount" formControlName="cumMaxWdlAmt"
+                                            name="cumMaxWdlAmt" maxlength="7" [readonly]="mode=='V'">
+                                        <mat-error *ngIf="cardTypeFromGroup.get('cumMaxWdlAmt').hasError('required')">
+                                            Cumulative Max Amt is required
+                                        </mat-error>
+                                        <mat-error *ngIf="cardTypeFromGroup.get('cumMaxWdlAmt').hasError('pattern')">
+                                            Only numeric values are allowed
+                                        </mat-error>
+                                        <mat-error *ngIf="cardTypeFromGroup.get('cumMaxWdlAmt').hasError('min')">
+                                            Amount cannot be negative
+                                        </mat-error>
+                                        <mat-error *ngIf="cardTypeFromGroup.get('cumMaxWdlAmt').hasError('max')">
+                                            Amount cannot exceed 9,999,999
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <mat-form-field class="example-half-width">
+                                        <mat-label>Cumulative Maximum Count</mat-label>
+                                        <input matInput placeholder="Enter Count" formControlName="cumMaxWdlCnt"
+                                            name="cumMaxWdlCnt" maxlength="2" [readonly]="mode=='V'">
+                                        <mat-error *ngIf="cardTypeFromGroup.get('cumMaxWdlCnt').hasError('required')">
+                                            Cumulative Cnt is required
+                                        </mat-error>
+                                        <mat-error *ngIf="cardTypeFromGroup.get('cumMaxWdlCnt').hasError('pattern')">
+                                            Only numeric values are allowed
+                                        </mat-error>
+                                        <mat-error *ngIf="cardTypeFromGroup.get('cumMaxWdlCnt').hasError('min')">
+                                            Count cannot be negative
+                                        </mat-error>
+                                        <mat-error *ngIf="cardTypeFromGroup.get('cumMaxWdlCnt').hasError('max')">
+                                            Count cannot exceed 99
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                        </form>
+
+                        <div class="d-flex justify-content-center">
+
+                            <button mat-stroked-button mat-dialog-close color="warn" style="margin-right: 20px;"
+                                (click)="clear()" *ngIf="mode==='A'">
+                                <mat-icon>refresh</mat-icon> Reset
+                            </button>
+
+                            <button mat-stroked-button mat-dialog-close color="primary" style="margin-right: 20px;"
+                                (click)="backList()">
+                                <mat-icon>arrow_back</mat-icon> Back
+                            </button>
+
+                            <button type="submit" mat-raised-button [color]="mode === 'E' ? 'accent' : 'primary'"
+                                class="md-btn" [disabled]="cardTypeFromGroup.invalid" (click)="addCardType()"
+                                *ngIf="mode==='A' || mode==='E' || mode==='C'">
+                                <mat-icon>{{ mode === 'E' ? 'edit' : 'check_circle' }}</mat-icon>&nbsp;
+                                {{ mode === 'E' ? 'Update' : 'Submit' }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

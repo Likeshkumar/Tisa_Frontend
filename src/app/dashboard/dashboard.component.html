@@ -1,0 +1,538 @@
+<!-- <div class="main-content" *ngIf="showMakerRecords">
+    <mat-sidenav-container class="sidenav-container">
+        <mat-sidenav-content>
+            <mat-toolbar color="primary" class="top-toolbar" style="background-color: red;">
+                <span>Debit Card Management System Maker</span>
+                <span class="spacer"></span>
+                <mat-icon style="margin-right: 30px; cursor: pointer;"
+                    (click)="openUserDetailsDialog()">account_circle</mat-icon>
+            </mat-toolbar>
+
+            <div class="content">
+                <div class="dashboard-grid">
+                    <mat-card class="card">
+                        <mat-card-title style="display: flex; align-items: center;">
+                            <mat-icon>home</mat-icon>
+                            <span style="margin-left: 8px;">Total Institution</span>
+                        </mat-card-title>
+
+                        <mat-card-content>
+                            <span>{{dashBoarddetailsList.totalInstitution}}</span>
+                        </mat-card-content>
+                    </mat-card>
+
+                    <mat-card class="card">
+                        <mat-card-title style="display: flex; align-items: center;">
+                            <mat-icon>credit_card</mat-icon>
+                            <span style="margin-left: 8px;">Total Bin</span>
+                        </mat-card-title>
+
+                        <mat-card-content>
+                            <span>{{ dashBoarddetailsList.totalBin }}</span>
+                        </mat-card-content>
+                    </mat-card>
+
+                    <mat-card class="card">
+                        <mat-card-title style="display: flex; align-items: center;">
+                            <mat-icon>home</mat-icon>
+                            <span style="margin-left: 8px;">Total Branch</span>
+                        </mat-card-title>
+
+                        <mat-card-content>
+                            <span> {{ dashBoarddetailsList.totalBranch }}</span>
+                        </mat-card-content>
+                    </mat-card>
+
+                    <mat-card class="card">
+                        <mat-card-title style="display: flex; align-items: center;">
+                            <mat-icon>fiber_pin</mat-icon>
+                            <span style="margin-left: 8px;">Waiting for CVV Genertion</span>
+                        </mat-card-title>
+
+                        <mat-card-content>
+                            <span>Personalized - {{dashBoarddetailsList.totalCvvGenPerswait}}</span>
+                            <br>
+                            <span>Instant - {{dashBoarddetailsList.totalCvvGenInswait}}</span>
+                        </mat-card-content>
+                    </mat-card>
+
+                    <mat-card class="card">
+                        <mat-card-title style="display: flex; align-items: center;">
+                            <mat-icon>enhanced_encryption</mat-icon>
+                            <span style="margin-left: 8px;">Waiting for PRE Generation</span>
+                        </mat-card-title>
+
+                        <mat-card-content>
+                            <span>Personalized - {{dashBoarddetailsList.totalPreGenPerswait}}</span>
+                            <br>
+                            <span>Instant - {{dashBoarddetailsList.totalPreGenInswait}}</span>
+                        </mat-card-content>
+                    </mat-card>
+
+                    <mat-card class="card">
+                        <mat-card-title style="display: flex; align-items: center;">
+                            <mat-icon>enhanced_encryption</mat-icon>
+                            <span style="margin-left: 8px;">Waiting for PRE File Download</span>
+                        </mat-card-title>
+
+                        <mat-card-content>
+                            <span>Personalized - {{dashBoarddetailsList.totalPreDownPerswait}}</span>
+                            <br>
+                            <span>Instant - {{dashBoarddetailsList.totalPreDownInswait}}</span>
+                        </mat-card-content>
+                    </mat-card>
+
+                    <mat-card class="card">
+                        <mat-card-title style="display: flex; align-items: center;">
+                            <mat-icon>move_to_inbox</mat-icon>
+                            <span style="margin-left: 8px;">Waiting for Receive Cards</span>
+                        </mat-card-title>
+
+                        <mat-card-content>
+                            <span>Personalized - {{dashBoarddetailsList.totalCardReceivePerswait}}</span>
+                            <br>
+                            <span>Instant - {{dashBoarddetailsList.totalCardReceiveInswait}}</span>
+                        </mat-card-content>
+                    </mat-card>
+
+                    <mat-card class="card">
+                        <mat-card-title style="display: flex; align-items: center;">
+                            <mat-icon>verified</mat-icon>
+                            <span style="margin-left: 8px;">Waiting for Issuance Cards</span>
+                        </mat-card-title>
+
+                        <mat-card-content>
+                            <span>Personalized - {{dashBoarddetailsList.totalIssuancePerswait}}</span>
+                            <br>
+                            <span>Instant - {{dashBoarddetailsList.totalIssuanceInswait}}</span>
+                        </mat-card-content>
+                    </mat-card>
+
+                    <mat-card class="card">
+                        <mat-card-title style="display: flex; align-items: center;">
+                            <mat-icon>fiber_pin</mat-icon>
+                            <span style="margin-left: 8px;">Waiting for Customer Registration</span>
+                        </mat-card-title>
+
+                        <mat-card-content>
+                            <span>Instant - {{dashBoarddetailsList.totalCustomerRegInswait}}</span>
+                        </mat-card-content>
+                    </mat-card>
+
+                </div>
+            </div>
+        </mat-sidenav-content>
+    </mat-sidenav-container>
+</div>
+
+
+<div class="main-content" *ngIf="showCheckerRecords">
+    <mat-sidenav-container class="sidenav-container">
+        <mat-sidenav-content>
+            <mat-toolbar color="primary" class="top-toolbar" style="background-color: red;">
+                <span>Debit Card Management System</span>
+                <span class="spacer"></span>
+                <mat-icon style="margin-right: 30px; cursor: pointer;"
+                    (click)="openUserDetailsDialog()">account_circle</mat-icon>
+            </mat-toolbar>
+
+            <div class="content">
+                <div class="dashboard-grid">
+                    <mat-card class="card">
+                        <mat-card-title style="display: flex; align-items: center;">
+                            <mat-icon>home</mat-icon>
+                            <span style="margin-left: 8px;">Total Institution</span>
+                        </mat-card-title>
+
+                        <mat-card-content>
+                            <span>{{dashBoarddetailsList.totalInstitution}}</span>
+                        </mat-card-content>
+                    </mat-card>
+
+                    <mat-card class="card">
+                        <mat-card-title style="display: flex; align-items: center;">
+                            <mat-icon>credit_card</mat-icon>
+                            <span style="margin-left: 8px;">Total Bin</span>
+                        </mat-card-title>
+
+                        <mat-card-content>
+                            <span>{{ dashBoarddetailsList.totalBin }}</span>
+                        </mat-card-content>
+                    </mat-card>
+
+                    <mat-card class="card">
+                        <mat-card-title style="display: flex; align-items: center;">
+                            <mat-icon>home</mat-icon>
+                            <span style="margin-left: 8px;">Total Branch</span>
+                        </mat-card-title>
+
+                        <mat-card-content>
+                            <span>{{ dashBoarddetailsList.totalBranch }}</span>
+                        </mat-card-content>
+                    </mat-card>
+
+                    <mat-card class="card">
+                        <mat-card-title style="display: flex; align-items: center;">
+                            <mat-icon>fiber_pin</mat-icon>
+                            <span style="margin-left: 8px;">Waiting for Card Authorization</span>
+                        </mat-card-title>
+
+                        <mat-card-content>
+                            <span>Personalized - {{dashBoarddetailsList.totalCustomerRegPersAuthWait}}</span>
+                            <br>
+                            <span>Instant - {{dashBoarddetailsList.totalCardOrderInsAuthWait}}</span>
+                        </mat-card-content>
+                    </mat-card>
+
+                    <mat-card class="card">
+                        <mat-card-title style="display: flex; align-items: center;">
+                            <mat-icon>fiber_pin</mat-icon>
+                            <span style="margin-left: 8px;">Waiting for CVV Genertion</span>
+                        </mat-card-title>
+
+                        <mat-card-content>
+                            <span>Personalized - {{dashBoarddetailsList.totalcvvPersAuthWait}}</span>
+                            <br>
+                            <span>Instant - {{dashBoarddetailsList.totalcvvInsAuthWait}}</span>
+                        </mat-card-content>
+                    </mat-card>
+
+                    <mat-card class="card">
+                        <mat-card-title style="display: flex; align-items: center;">
+                            <mat-icon>enhanced_encryption</mat-icon>
+                            <span style="margin-left: 8px;">Waiting for PRE Generation</span>
+                        </mat-card-title>
+
+                        <mat-card-content>
+                            <span>Personalized - {{dashBoarddetailsList.totalPrePersAuthwait}}</span>
+                            <br>
+                            <span>Instant - {{dashBoarddetailsList.totalPreInsAuthwait}}</span>
+                        </mat-card-content>
+                    </mat-card>
+
+                    <mat-card class="card">
+                        <mat-card-title style="display: flex; align-items: center;">
+                            <mat-icon>enhanced_encryption</mat-icon>
+                            <span style="margin-left: 8px;">Waiting for PRE File Download</span>
+                        </mat-card-title>
+
+                        <mat-card-content>
+                            <span>Personalized - {{dashBoarddetailsList.totalPreDownPersAuthwait}}</span>
+                            <br>
+                            <span>Instant - {{dashBoarddetailsList.totalPreDownInsAuthwait}}</span>
+                        </mat-card-content>
+                    </mat-card>
+
+                    <mat-card class="card">
+                        <mat-card-title style="display: flex; align-items: center;">
+                            <mat-icon>move_to_inbox</mat-icon>
+                            <span style="margin-left: 8px;">Waiting for Receive Cards</span>
+                        </mat-card-title>
+
+                        <mat-card-content>
+                            <span>Personalized - {{dashBoarddetailsList.totalReceivePersAuthwait}}</span>
+                            <br>
+                            <span>Instant - {{dashBoarddetailsList.totalReceiveInsAuthwait}}</span>
+                        </mat-card-content>
+                    </mat-card>
+
+                    <mat-card class="card">
+                        <mat-card-title style="display: flex; align-items: center;">
+                            <mat-icon>verified</mat-icon>
+                            <span style="margin-left: 8px;">Waiting for Issuance Cards</span>
+                        </mat-card-title>
+
+                        <mat-card-content>
+                            <span>Personalized - {{dashBoarddetailsList.totalIssuancePersAuthwait}}</span>
+                            <span>Instant - {{dashBoarddetailsList.totalIssuanceInsAuthwait}}</span>
+                        </mat-card-content>
+                    </mat-card>
+
+                    <mat-card class="card">
+                        <mat-card-title style="display: flex; align-items: center;">
+                            <mat-icon>fiber_pin</mat-icon>
+                            <span style="margin-left: 8px;">Waiting for Customer Registration</span>
+                        </mat-card-title>
+
+                        <mat-card-content>
+                            <span>Instant -{{dashBoarddetailsList.totalCustomerRegInsAuthwait}}</span>
+                        </mat-card-content>
+                    </mat-card>
+
+                </div>
+            </div>
+        </mat-sidenav-content>
+    </mat-sidenav-container>
+</div> -->
+
+<div class="main-content" *ngIf="showMakerRecords">
+    <mat-sidenav-container class="sidenav-container">
+        <mat-sidenav-content>
+            <mat-toolbar color="primary" class="top-toolbar" style="background-color: #e72838;">
+                <span>Debit Card Management System – Manages the full lifecycle of card production and maintenance.</span>
+                <span class="spacer"></span>
+                <mat-icon style="margin-right: 30px; cursor: pointer;"
+                    (click)="openUserDetailsDialog()">account_circle</mat-icon>
+            </mat-toolbar>
+
+            <div class="content">
+                <div class="dashboard-grid">
+                    <!-- <mat-card class="card">
+                        <mat-card-title style="display: flex; align-items: center;">
+                            <mat-icon>home</mat-icon>
+                            <span style="margin-left: 8px;">Total Institution</span>
+                        </mat-card-title>
+
+                        <mat-card-content>
+                            <span>{{dashBoarddetailsList.totalInstitution}}</span>
+                        </mat-card-content>
+                    </mat-card> -->
+
+                    <!-- <mat-card class="card">
+                        <mat-card-title style="display: flex; align-items: center;">
+                            <mat-icon>credit_card</mat-icon>
+                            <span style="margin-left: 8px;">Total Bin</span>
+                        </mat-card-title>
+
+                        <mat-card-content>
+                            <span>{{ dashBoarddetailsList.totalBin }}</span>
+                        </mat-card-content>
+                    </mat-card> -->
+
+                    <!-- <mat-card class="card">
+                        <mat-card-title style="display: flex; align-items: center;">
+                            <mat-icon>home</mat-icon>
+                            <span style="margin-left: 8px;">Total Branch</span>
+                        </mat-card-title>
+
+                        <mat-card-content>
+                            <span> {{ dashBoarddetailsList.totalBranch }}</span>
+                        </mat-card-content>
+                    </mat-card> -->
+
+                    <mat-card class="card">
+                        <mat-card-title style="display: flex; align-items: center;">
+                            <mat-icon>fiber_pin</mat-icon>
+                            <span style="margin-left: 8px;">Waiting for CVV Generation</span>
+                        </mat-card-title>
+
+                        <mat-card-content>
+                            <span>Personalized - {{dashBoarddetailsList.totalCvvGenPerswait}}</span>
+                            <br>
+                            <span>Instant - {{dashBoarddetailsList.totalCvvGenInswait}}</span>
+                        </mat-card-content>
+                    </mat-card>
+
+                    <mat-card class="card">
+                        <mat-card-title style="display: flex; align-items: center;">
+                            <mat-icon>enhanced_encryption</mat-icon>
+                            <span style="margin-left: 8px;">Waiting for Embossing File Generation</span>
+                        </mat-card-title>
+
+                        <mat-card-content>
+                            <span>Personalized - {{dashBoarddetailsList.totalPreGenPerswait}}</span>
+                            <br>
+                            <span>Instant - {{dashBoarddetailsList.totalPreGenInswait}}</span>
+                        </mat-card-content>
+                    </mat-card>
+
+                    <mat-card class="card">
+                        <mat-card-title style="display: flex; align-items: center;">
+                            <mat-icon>enhanced_encryption</mat-icon>
+                            <span style="margin-left: 8px;">Waiting for Embossing File Download</span>
+                        </mat-card-title>
+
+                        <mat-card-content>
+                            <span>Personalized - {{dashBoarddetailsList.totalPreDownPerswait}}</span>
+                            <br>
+                            <span>Instant - {{dashBoarddetailsList.totalPreDownInswait}}</span>
+                        </mat-card-content>
+                    </mat-card>
+
+                    <mat-card class="card">
+                        <mat-card-title style="display: flex; align-items: center;">
+                            <mat-icon>move_to_inbox</mat-icon>
+                            <span style="margin-left: 8px;">Waiting for Receive Cards</span>
+                        </mat-card-title>
+
+                        <mat-card-content>
+                            <span>Personalized - {{dashBoarddetailsList.totalCardReceivePerswait}}</span>
+                            <br>
+                            <span>Instant - {{dashBoarddetailsList.totalCardReceiveInswait}}</span>
+                        </mat-card-content>
+                    </mat-card>
+
+                    <mat-card class="card">
+                        <mat-card-title style="display: flex; align-items: center;">
+                            <mat-icon>verified</mat-icon>
+                            <span style="margin-left: 8px;">Waiting for Issuance Cards</span>
+                        </mat-card-title>
+
+                        <mat-card-content>
+                            <span>Personalized - {{dashBoarddetailsList.totalIssuancePerswait}}</span>
+                            <br>
+                            <span>Instant - {{dashBoarddetailsList.totalIssuanceInswait}}</span>
+                        </mat-card-content>
+                    </mat-card>
+
+                    <!-- <mat-card class="card">
+                        <mat-card-title style="display: flex; align-items: center;">
+                            <mat-icon>fiber_pin</mat-icon>
+                            <span style="margin-left: 8px;">Waiting for Customer Registration</span>
+                        </mat-card-title>
+
+                        <mat-card-content>
+                            <span>Instant - {{dashBoarddetailsList.totalCustomerRegInswait}}</span>
+                        </mat-card-content>
+                    </mat-card> -->
+
+                </div>
+            </div>
+        </mat-sidenav-content>
+    </mat-sidenav-container>
+</div>
+
+
+<div class="main-content" *ngIf="showCheckerRecords">
+    <mat-sidenav-container class="sidenav-container">
+        <mat-sidenav-content>
+            <!-- <mat-toolbar color="primary" class="top-toolbar" style="background-color: red;">
+                <span>Debit Card Management System</span> -->
+
+                <mat-toolbar color="primary" class="top-toolbar" style="background-color: #e72838;">
+                <span>Debit Card Management System – Manages the full lifecycle of card production and maintenance.</span>
+                <span class="spacer"></span>
+                <!-- <mat-icon>search</mat-icon> -->
+                <mat-icon style="margin-right: 30px; cursor: pointer;"
+                    (click)="openUserDetailsDialog()">account_circle</mat-icon>
+            </mat-toolbar>
+
+            <div class="content">
+                <div class="dashboard-grid">
+                    <!-- <mat-card class="card">
+                        <mat-card-title style="display: flex; align-items: center;">
+                            <mat-icon>home</mat-icon>
+                            <span style="margin-left: 8px;">Total Institution</span>
+                        </mat-card-title>
+
+                        <mat-card-content>
+                            <span>{{dashBoarddetailsList.totalInstitution}}</span>
+                        </mat-card-content>
+                    </mat-card>
+
+                    <mat-card class="card">
+                        <mat-card-title style="display: flex; align-items: center;">
+                            <mat-icon>credit_card</mat-icon>
+                            <span style="margin-left: 8px;">Total Bin</span>
+                        </mat-card-title>
+
+                        <mat-card-content>
+                            <span>{{ dashBoarddetailsList.totalBin }}</span>
+                        </mat-card-content>
+                    </mat-card>
+
+                    <mat-card class="card">
+                        <mat-card-title style="display: flex; align-items: center;">
+                            <mat-icon>home</mat-icon>
+                            <span style="margin-left: 8px;">Total Branch</span>
+                        </mat-card-title>
+
+                        <mat-card-content>
+                            <span>{{ dashBoarddetailsList.totalBranch }}</span>
+                        </mat-card-content>
+                    </mat-card> -->
+
+                    <mat-card class="card">
+                        <mat-card-title style="display: flex; align-items: center;">
+                            <mat-icon>fiber_pin</mat-icon>
+                            <span style="margin-left: 8px;">Waiting for Card Authorization</span><br>
+                        </mat-card-title>
+
+                        <mat-card-content>
+                            <span>Personalized - {{dashBoarddetailsList.totalCustomerRegPersAuthWait}}</span>
+                            <br>
+                            <span>Instant - {{dashBoarddetailsList.totalCardOrderInsAuthWait}}</span>
+                        </mat-card-content>
+                    </mat-card>
+
+                    <mat-card class="card">
+                        <mat-card-title style="display: flex; align-items: center;">
+                            <mat-icon>fiber_pin</mat-icon>
+                            <span style="margin-left: 8px;">Waiting for CVV Authorization</span><br>
+                        </mat-card-title>
+
+                        <mat-card-content>
+                            <span>Personalized - {{dashBoarddetailsList.totalcvvPersAuthWait}}</span>
+                            <br>
+                            <span>Instant - {{dashBoarddetailsList.totalcvvInsAuthWait}}</span>
+                        </mat-card-content>
+                    </mat-card>
+
+                    <mat-card class="card">
+                        <mat-card-title style="display: flex; align-items: center;">
+                            <mat-icon>enhanced_encryption</mat-icon>
+                            <span style="margin-left: 8px;">Waiting for Embossing File Authorization</span><br>
+                        </mat-card-title>
+
+                        <mat-card-content>
+                            <span>Personalized - {{dashBoarddetailsList.totalPrePersAuthwait}}</span>
+                            <br>
+                            <span>Instant - {{dashBoarddetailsList.totalPreInsAuthwait}}</span>
+                        </mat-card-content>
+                    </mat-card>
+
+                    <!-- <mat-card class="card">
+                        <mat-card-title style="display: flex; align-items: center;">
+                            <mat-icon>enhanced_encryption</mat-icon>
+                            <span style="margin-left: 8px;">Waiting for PRE File Download</span>
+                        </mat-card-title>
+
+                        <mat-card-content>
+                            <span>Personalized - {{dashBoarddetailsList.totalPreDownPersAuthwait}}</span>
+                            <br>
+                            <span>Instant - {{dashBoarddetailsList.totalPreDownInsAuthwait}}</span>
+                        </mat-card-content>
+                    </mat-card> -->
+
+                    <mat-card class="card">
+                        <mat-card-title style="display: flex; align-items: center;">
+                            <mat-icon>move_to_inbox</mat-icon>
+                            <span style="margin-left: 8px;">Waiting for Receive Authorization</span><br>
+                        </mat-card-title>
+
+                        <mat-card-content>
+                            <span>Personalized - {{dashBoarddetailsList.totalReceivePersAuthwait}}</span>
+                            <br>
+                            <span>Instant - {{dashBoarddetailsList.totalReceiveInsAuthwait}}</span>
+                        </mat-card-content>
+                    </mat-card>
+
+                    <mat-card class="card">
+                        <mat-card-title style="display: flex; align-items: center;">
+                            <mat-icon>verified</mat-icon>
+                            <span style="margin-left: 8px;">Waiting for Issuance Authorization</span><br>
+                        </mat-card-title>
+
+                        <mat-card-content>
+                            <span>Personalized - {{dashBoarddetailsList.totalIssuancePersAuthwait}}</span>
+                            <br>
+                            <span>Instant - {{dashBoarddetailsList.totalIssuanceInsAuthwait}}</span>
+                        </mat-card-content>
+                    </mat-card>
+
+                    <mat-card class="card">
+                        <mat-card-title style="display: flex; align-items: center;">
+                            <mat-icon>fiber_pin</mat-icon>
+                            <span style="margin-left: 8px;">Waiting for Customer Reg Authorization</span><br>
+                        </mat-card-title>
+
+                        <mat-card-content>
+                            <span>Instant -{{dashBoarddetailsList.totalCustomerRegInsAuthwait}}</span>
+                        </mat-card-content>
+                    </mat-card>
+
+                </div>
+            </div>
+        </mat-sidenav-content>
+    </mat-sidenav-container>
+</div>

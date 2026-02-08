@@ -1,0 +1,41 @@
+.sidenav-container {
+  height: 100vh;
+}
+
+.sidebar {
+  padding: 20px;
+}
+
+.top-toolbar {
+  display: flex;
+  justify-content: space-between;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.content {
+  padding: 20px;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 16px;
+}
+
+.card {
+  padding: 16px;
+}
+
+mat-card-title {
+  font-size: 18px;
+}
+
+.dialog-content {
+  p {
+    font-size: 16px;
+    margin: 8px 0;
+  }
+}

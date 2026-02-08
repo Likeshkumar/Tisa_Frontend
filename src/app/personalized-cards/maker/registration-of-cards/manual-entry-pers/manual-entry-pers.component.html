@@ -1,0 +1,557 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header card-header-custom-red">
+                <div class="row">
+                    <div class="col-sm-9">
+                        <h4 class="card-title ">Registration of Cards - Manual Registration</h4>
+                    </div>
+                    <div class="col-sm-3">
+                    </div>
+                </div>
+            </div>
+            <div class="card-body" style="margin-top: 20px;">
+                <div class="row">
+                    <div class="col-md-12">
+                        <mat-stepper linear #stepper>
+                            <mat-step [stepControl]="firstFormGroup">
+                                <form [formGroup]="firstFormGroup">
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <mat-form-field class="example-full-width">
+                                                <mat-label>Product</mat-label>
+                                                <mat-select formControlName="productcode" [(ngModel)]="productObj"
+                                                    (selectionChange)="gettypeofCard()">
+                                                    <mat-option *ngFor="let product of productlist" [value]="product">
+                                                        {{ product.productCode }} - {{ product.productDesc }}
+                                                    </mat-option>
+                                                    <mat-option *ngIf="productlist?.length === 0">No Records
+                                                        Found</mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <mat-form-field>
+                                                <mat-label>Limit Based On</mat-label>
+                                                <mat-select formControlName="limitBaseOn">
+                                                    <mat-option value="CT">Card Type</mat-option>
+                                                    <!-- <mat-option value="AT">Account Type</mat-option>
+                                                    <mat-option value="IN">Individual</mat-option> -->
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                        <ng-container *ngIf="firstFormGroup.get('limitBaseOn')?.value === 'IN'">
+                                            <div class="col-sm-4" *ngFor="let field of individualFields">
+                                                <mat-form-field>
+                                                    <mat-label>{{ field.label }}</mat-label>
+                                                    <input matInput type="tel" [formControlName]="field.controlName"
+                                                        [maxlength]="field.maxlength"
+                                                        placeholder="Enter {{ field.label }}">
+                                                    <mat-error
+                                                        *ngIf="firstFormGroup.get(field.controlName)?.hasError('required')">
+                                                        {{ field.label }} is required
+                                                    </mat-error>
+                                                    <mat-error
+                                                        *ngIf="firstFormGroup.get(field.controlName)?.hasError('pattern')">
+                                                        Enter exactly {{ field.maxlength }} digits
+                                                    </mat-error>
+                                                </mat-form-field>
+                                            </div>
+                                        </ng-container>
+                                        <div class="col-sm-4">
+                                            <mat-form-field class="example-full-width">
+                                                <mat-label>Type of Card</mat-label>
+                                                <mat-select formControlName="typeofCard">
+                                                    <mat-option *ngFor="let cardType of cardtypeList"
+                                                        [value]="cardType">{{cardType.typeofCard}} -
+                                                        {{cardType.description}}</mat-option>
+                                                    <mat-option *ngIf="cardtypeList?.length === 0">No Records
+                                                        Found</mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <mat-form-field class="example-full-width">
+                                                <mat-label>PIN Gen Method</mat-label>
+                                                <mat-select formControlName="pingenMethod">
+                                                    <mat-option value="G">Green Pin</mat-option>
+                                                    <!-- <mat-option value="P">Pin Mailer</mat-option> -->
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-4" *ngIf="firstFormGroup.get('limitBaseOn')?.value === 'IN'">
+                                            <mat-form-field>
+                                                <mat-label>Withdraw Amount</mat-label>
+                                                <input matInput type="tel" formControlName="withdrawAmount"
+                                                    placeholder="Enter Withdraw Amount" maxlength="6">
+                                                <mat-error *ngIf="secondFormGroup.invalid">
+                                                    Enter the Number and Maximum 6 numbers only
+                                                </mat-error>
+                                                <mat-error
+                                                    *ngIf="firstFormGroup.get('withdrawAmount').hasError('pattern')">
+                                                    Enter exactly 6 digits
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-4" *ngIf="firstFormGroup.get('limitBaseOn')?.value === 'IN'">
+                                            <mat-form-field>
+                                                <mat-label>withdraw Count</mat-label>
+                                                <input matInput type="tel" formControlName="withdrawCount"
+                                                    placeholder="Enter withdrawCount" maxlength="2">
+                                                <mat-error *ngIf="secondFormGroup.invalid">
+                                                    Enter the Number and Maximum 2 numbers only
+                                                </mat-error>
+                                                <mat-error
+                                                    *ngIf="firstFormGroup.get('withdrawCount').hasError('pattern')">
+                                                    Enter exactly 2 digits
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-4" *ngIf="firstFormGroup.get('limitBaseOn')?.value === 'IN'">
+                                            <mat-form-field>
+                                                <mat-label>Purchase Amount</mat-label>
+                                                <input matInput type="tel" formControlName="purchaseAmount"
+                                                    placeholder="Enter Purchase Amount" maxlength="6">
+                                                <mat-error *ngIf="secondFormGroup.invalid">
+                                                    Enter the Number and Maximum 6 numbers only
+                                                </mat-error>
+                                                <mat-error
+                                                    *ngIf="firstFormGroup.get('purchaseAmount').hasError('pattern')">
+                                                    Enter exactly 6 digits
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-4" *ngIf="firstFormGroup.get('limitBaseOn')?.value === 'IN'">
+                                            <mat-form-field>
+                                                <mat-label>Purchase Count</mat-label>
+                                                <input matInput type="tel" formControlName="purchaseCount"
+                                                    placeholder="Enter Purchase Count" maxlength="2">
+                                                <mat-error *ngIf="secondFormGroup.invalid">
+                                                    Enter the Number and Maximum 2 numbers only
+                                                </mat-error>
+                                                <mat-error
+                                                    *ngIf="firstFormGroup.get('purchaseCount').hasError('pattern')">
+                                                    Enter exactly 2 digits
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-4" *ngIf="firstFormGroup.get('limitBaseOn')?.value === 'IN'">
+                                            <mat-form-field>
+                                                <mat-label>transferAmount</mat-label>
+                                                <input matInput type="tel" formControlName="transferAmount"
+                                                    placeholder="Enter transferAmount" maxlength="6">
+                                                <mat-error *ngIf="secondFormGroup.invalid">
+                                                    Enter the Number and Maximum 6 numbers only
+                                                </mat-error>
+                                                <mat-error
+                                                    *ngIf="firstFormGroup.get('transferAmount').hasError('pattern')">
+                                                    Enter exactly 6 digits
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-4" *ngIf="firstFormGroup.get('limitBaseOn')?.value === 'IN'">
+                                            <mat-form-field>
+                                                <mat-label>Transfere Count</mat-label>
+                                                <input matInput type="tel" formControlName="transfereCount"
+                                                    placeholder="Enter Transfere Count" maxlength="2">
+                                                <mat-error *ngIf="secondFormGroup.invalid">
+                                                    Enter the Number and Maximum 2 numbers only
+                                                </mat-error>
+                                                <mat-error
+                                                    *ngIf="firstFormGroup.get('transfereCount').hasError('pattern')">
+                                                    Enter exactly 2 digits
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <ng-template matStepLabel>Product Information</ng-template>
+                                    <div>
+                                        <button mat-button matStepperNext>Next</button>
+                                    </div>
+                                </form>
+                            </mat-step>
+                            <mat-step [stepControl]="secondFormGroup">
+                                <form [formGroup]="secondFormGroup">
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <mat-form-field class="example-full-width">
+                                                <mat-label>Branch</mat-label>
+                                                <mat-select formControlName="branchcode">
+                                                    <mat-option *ngFor="let branch of branchList"
+                                                        [value]="branch">{{branch.branchCode }} - {{branch.branchName}}
+                                                    </mat-option>
+                                                    <mat-option *ngIf="branchList?.length === 0">No Records
+                                                        Found</mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <mat-form-field>
+                                                <mat-label>Account Number</mat-label>
+                                                <input matInput type="tel" formControlName="accountNo"
+                                                    placeholder="Enter Account Number" minlength="16" maxlength="16">
+                                                <mat-error *ngIf="secondFormGroup.invalid">
+                                                    Enter the Number and Maximum 16 numbers only
+                                                </mat-error>
+                                                <mat-error *ngIf="secondFormGroup.get('accountNo').hasError('pattern')">
+                                                    Enter exactly 16 digits
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <mat-form-field>
+                                                <mat-label>Account Type</mat-label>
+                                                <mat-select formControlName="acctType"
+                                                    (selectionChange)="getAccSubTypeList()">
+                                                    <mat-option *ngFor="let acctType of acctTypeList"
+                                                        [value]="acctType.accttype">
+                                                        {{ acctType.accttype }} - {{ acctType.acctdesc }}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-option *ngIf="acctTypeList?.length === 0">No Records
+                                                    Found</mat-option>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <mat-form-field>
+                                                <mat-label>Account Sub Type</mat-label>
+                                                <mat-select formControlName="acctSubType" (selectionChange)="getFee()">
+                                                    <mat-option *ngFor="let acctSub of acctSubTypeList"
+                                                        [value]="acctSub.subAcctType">
+                                                        {{ acctSub.subAcctType }} - {{ acctSub.subAcctDesc }}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <mat-form-field>
+                                                <mat-label>Fee</mat-label>
+                                                <mat-select formControlName="feeCode">
+                                                    <mat-option *ngFor="let element of data"
+                                                        [value]="element.schemeCode">
+                                                        {{ element.schemeCode }} - {{ element.schemeDescription }}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <mat-form-field class="example-full-width">
+                                                <mat-label>Currency</mat-label>
+                                                <mat-select formControlName="currency">
+                                                    <mat-option [value]="currency.currencyCode"
+                                                        *ngFor="let currency of currencylist">{{currency.currencyCode}}
+                                                        - {{currency.currencyDesc}}</mat-option>
+                                                    <mat-option *ngIf="currencylist?.length === 0">No Records
+                                                        Found</mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <ng-template matStepLabel>Account Information</ng-template>
+                                    <div>
+                                        <button mat-button matStepperPrevious>Back</button>
+                                        <button mat-button matStepperNext>Next</button>
+                                    </div>
+                                </form>
+                            </mat-step>
+                            <mat-step [stepControl]="thirdFormGroup">
+                                <form [formGroup]="thirdFormGroup">
+                                    <div class="row">
+                                        <div class="col-sm-4" *ngIf="cmsData?.custid_gen === 'Manual'">
+                                            <mat-form-field>
+                                                <mat-label>Customer Id</mat-label>
+                                                <input matInput type="tel" formControlName="customerId"
+                                                    placeholder="Enter Customer Id" maxlength="6" minlength="6">
+                                                <mat-error
+                                                    *ngIf="thirdFormGroup.get('customerId')?.hasError('required')">
+                                                    Customer ID is required.
+                                                </mat-error>
+                                                <mat-error
+                                                    *ngIf="thirdFormGroup.get('customerId')?.hasError('pattern')">
+                                                    Enter exactly 6 digits.
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <mat-form-field class="example-full-width">
+                                                <mat-label>Gender</mat-label>
+                                                <mat-select formControlName="gender">
+                                                    <mat-option value="M">Male</mat-option>
+                                                    <mat-option value="F">Female</mat-option>
+                                                    <!-- <mat-option value="O">Others</mat-option> -->
+                                                </mat-select>
+                                                <mat-error *ngIf="thirdFormGroup.get('gender')?.hasError('required')">
+                                                    Gender is required.
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <mat-form-field>
+                                                <mat-label>Encoding Name</mat-label>
+                                                <input matInput formControlName="encodingname"
+                                                    placeholder="Encoding Name">
+                                                <mat-error
+                                                    *ngIf="thirdFormGroup.get('encodingname')?.hasError('required')">
+                                                    Encoding Name is required.
+                                                </mat-error>
+                                                <mat-error
+                                                    *ngIf="thirdFormGroup.get('encodingname')?.hasError('maxlength')">
+                                                    Name cannot exceed 24 characters.
+                                                </mat-error>
+                                                <mat-error
+                                                    *ngIf="thirdFormGroup.get('encodingname')?.hasError('pattern')">
+                                                    Alphabets and spaces only allowed.
+                                                </mat-error>
+                                                <mat-error
+                                                    *ngIf="thirdFormGroup.get('encodingname')?.hasError('whitespace')">
+                                                    Only spaces are not allowed.
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <mat-form-field>
+                                                <mat-label>Embossing Name</mat-label>
+                                                <input matInput formControlName="embossingname"
+                                                    placeholder="Embossing Name">
+                                                <mat-error
+                                                    *ngIf="thirdFormGroup.get('embossingname')?.hasError('required')">
+                                                    Embossing Name is required.
+                                                </mat-error>
+                                                <mat-error
+                                                    *ngIf="thirdFormGroup.get('embossingname')?.hasError('maxlength')">
+                                                    Name cannot exceed 24 characters.
+                                                </mat-error>
+                                                <mat-error
+                                                    *ngIf="thirdFormGroup.get('embossingname')?.hasError('pattern')">
+                                                    Alphabets and spaces only allowed.
+                                                </mat-error>
+                                                <mat-error
+                                                    *ngIf="thirdFormGroup.get('embossingname')?.hasError('whitespace')">
+                                                    Only spaces are not allowed.
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <mat-form-field>
+                                                <mat-label>Date of Birth</mat-label>
+                                                <input matInput [matDatepicker]="picker3" formControlName="dateofBirth">
+                                                <mat-hint>MM/DD/YYYY</mat-hint>
+                                                <mat-datepicker-toggle matSuffix
+                                                    [for]="picker3"></mat-datepicker-toggle>
+                                                <mat-datepicker #picker3></mat-datepicker>
+                                                <mat-error
+                                                    *ngIf="thirdFormGroup.get('dateofBirth')?.hasError('invalidDate')">
+                                                    Date of Birth cannot be in the future.
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <mat-form-field>
+                                                <mat-label>Mother / Spouse Name</mat-label>
+                                                <input matInput formControlName="spouseName"
+                                                    placeholder="Mother / Spouse Name">
+                                                <mat-error
+                                                    *ngIf="thirdFormGroup.get('spouseName')?.hasError('maxlength')">
+                                                    Name cannot exceed 24 characters.
+                                                </mat-error>
+                                                <mat-error
+                                                    *ngIf="thirdFormGroup.get('spouseName')?.hasError('pattern')">
+                                                    Alphabets and spaces only allowed.
+                                                </mat-error>
+                                                <mat-error
+                                                    *ngIf="thirdFormGroup.get('spouseName')?.hasError('whitespace')">
+                                                    Only spaces are not allowed.
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <ng-template matStepLabel>Customer Information</ng-template>
+                                    <div>
+                                        <button mat-button matStepperPrevious>Back</button>
+                                        <button mat-button matStepperNext>Next</button>
+                                    </div>
+                                </form>
+                            </mat-step>
+                            <mat-step [stepControl]="fourthFormGroup" label="Contact Information">
+                                <form [formGroup]="fourthFormGroup">
+                                    <!-- <h5 style="font-weight: bold;">Residence Address</h5> -->
+                                    <!-- <div class="row">
+                                        <div class="col-sm-4">
+                                            <mat-form-field>
+                                                <mat-label>Address Line 1</mat-label>
+                                                <input matInput formControlName="addressline1"
+                                                    placeholder="Ex. 1 Main St, New York, NY">
+                                                <mat-error
+                                                    *ngIf="fourthFormGroup.controls['addressline1'].hasError('maxlength')">
+                                                    Address cannot exceed 24 characters.
+                                                </mat-error>
+                                                <mat-error
+                                                    *ngIf="fourthFormGroup.controls['addressline1'].hasError('pattern')">
+                                                    Address can only include letters, numbers, spaces, commas, periods,
+                                                    and hyphens.
+                                                </mat-error>
+                                                <mat-error
+                                                    *ngIf="fourthFormGroup.controls['addressline1'].hasError('required')">
+                                                    Address is required.
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <mat-form-field>
+                                                <mat-label>Address Line 2</mat-label>
+                                                <input matInput formControlName="addressline2"
+                                                    placeholder="Ex. 1 Main St, New York, NY">
+                                                <mat-error
+                                                    *ngIf="fourthFormGroup.controls['addressline2'].hasError('maxlength')">
+                                                    Address cannot exceed 24 characters.
+                                                </mat-error>
+                                                <mat-error
+                                                    *ngIf="fourthFormGroup.controls['addressline2'].hasError('pattern')">
+                                                    Address can only include letters, numbers, spaces, commas, periods,
+                                                    and hyphens.
+                                                </mat-error>
+                                                <mat-error
+                                                    *ngIf="fourthFormGroup.controls['addressline2'].hasError('required')">
+                                                    Address is required.
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <mat-form-field>
+                                                <mat-label>City</mat-label>
+                                                <input matInput formControlName="city" placeholder="City">
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <mat-form-field>
+                                                <mat-label>State</mat-label>
+                                                <input matInput formControlName="state" placeholder="State">
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <mat-form-field>
+                                                <mat-label>Pincode</mat-label>
+                                                <input matInput formControlName="pincode" placeholder="Pincode">
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <mat-form-field>
+                                                <mat-label>Country</mat-label>
+                                                <input matInput formControlName="country" placeholder="Country">
+                                            </mat-form-field>
+                                        </div>
+                                    </div> -->
+                                    <h5 style="font-weight: bold;">Mailing Address</h5>
+                                    <!-- <div class="row">
+                                        <div class="col-sm-12">
+                                            <mat-checkbox formControlName="autoFillMailingAddress"
+                                                (change)="autoFillMailing()">
+                                                "Click the checkbox to set the Residence Address as the Mailing
+                                                Address."
+                                            </mat-checkbox>
+                                        </div>
+                                    </div> -->
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <mat-form-field>
+                                                <mat-label>Address Line 1</mat-label>
+                                                <input matInput formControlName="mailaddressline1"
+                                                    placeholder="Ex. 1 Main St, New York, NY">
+                                                <mat-error
+                                                    *ngIf="fourthFormGroup.controls['mailaddressline1'].hasError('maxlength')">
+                                                    Address cannot exceed 35 characters.
+                                                </mat-error>
+                                                <mat-error
+                                                    *ngIf="fourthFormGroup.controls['mailaddressline1'].hasError('pattern')">
+                                                    Address can only include letters, numbers, spaces, commas, periods,
+                                                    hyphens, slashes, and apostrophes.
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <mat-form-field>
+                                                <mat-label>Address Line 2</mat-label>
+                                                <input matInput formControlName="mailaddressline2"
+                                                    placeholder="Ex. 1 Main St, New York, NY">
+                                                <mat-error
+                                                    *ngIf="fourthFormGroup.controls['mailaddressline2'].hasError('maxlength')">
+                                                    Address can only include letters, numbers, spaces, commas, periods,
+                                                    hyphens, slashes, and apostrophes.
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <mat-form-field>
+                                                <mat-label>City</mat-label>
+                                                <input matInput formControlName="mailcity" placeholder="City">
+                                            </mat-form-field>
+                                        </div>
+                                        <!-- <div class="col-sm-4">
+                                            <mat-form-field>
+                                                <mat-label>State</mat-label>
+                                                <input matInput formControlName="mailstate" placeholder="State">
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <mat-form-field>
+                                                <mat-label>Pincode</mat-label>
+                                                <input matInput type="tel" formControlName="mailpincode"
+                                                    placeholder="Pincode" maxlength="6">
+                                            </mat-form-field>
+                                        </div> -->
+                                        <div class="col-sm-4">
+                                            <mat-form-field>
+                                                <mat-label>Country</mat-label>
+                                                <input matInput formControlName="mailcountry" placeholder="Country">
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <mat-form-field>
+                                                <mat-label>Mobile No</mat-label>
+                                                <input matInput type="tel" formControlName="mobNo"
+                                                    placeholder="Mobile No" maxlength="9">
+                                                <mat-error *ngIf="fourthFormGroup.invalid">
+                                                    Enter the Numbers only
+                                                </mat-error>
+                                                <mat-error *ngIf="fourthFormGroup.get('mobNo').hasError('pattern')">
+                                                    Enter exactly 9 Numbers
+                                                </mat-error>
+                                                <mat-error *ngIf="fourthFormGroup.get('mobNo').hasError('required')">
+                                                    Mobile No is required
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <mat-form-field>
+                                                <mat-label>Email Id</mat-label>
+                                                <input matInput type="email" formControlName="emailId"
+                                                    placeholder="Email Id">
+                                                <mat-error *ngIf="fourthFormGroup.get('emailId').hasError('email')">
+                                                    Please enter a valid email address
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <ng-template matStepLabel>Contact Information</ng-template>
+                                    <div>
+                                        <button mat-button matStepperPrevious>Back</button>
+                                        <button mat-button matStepperNext>Next</button>
+                                    </div>
+                                </form>
+                            </mat-step>
+                            <mat-step>
+                                <ng-template matStepLabel>Done</ng-template>
+                                <p>Please review the details and click Submit to proceed</p>
+                                <div>
+                                    <button mat-button matStepperPrevious>Back</button>
+                                    <button mat-button (click)="stepper.reset()">Reset</button>
+                                    <button mat-button (click)="addcustomerEntry()">Submit</button>
+                                </div>
+                            </mat-step>
+                        </mat-stepper>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

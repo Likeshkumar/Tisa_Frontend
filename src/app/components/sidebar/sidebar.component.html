@@ -1,0 +1,95 @@
+<!-- <div class="logo">
+    <a class="simple-text">
+        <div>
+            <img style="width: 120px;" src="assets/img/image.png" />
+        </div>
+    </a>
+</div>
+
+<div class="sidebar-wrapper">
+    <ul class="nav">
+        <li *ngFor="let menu of menuItems" class="nav-item" routerLinkActive="active">
+            <a class="nav-link collapsed text-truncate colorclass" *ngIf="menu.enable"
+                [routerLink]="menu.url ? [menu.url] : null" (click)="toggleMenu(menu.id)">
+                <span class="d-none d-sm-inline">
+                    <mat-icon>{{ menu.icon }}</mat-icon>
+                    &nbsp;{{ menu.name }}
+                </span>
+            </a>
+
+            <div *ngIf="menu.subMenus?.length" class="submenu-container" [ngClass]="{'show': activeMenuId === menu.id}"
+                [attr.id]="'submenu' + menu.id">
+                <ul class="flex-column pl-2 nav">
+                    <ng-container *ngTemplateOutlet="renderMenu; context: { items: menu.subMenus }"></ng-container>
+                </ul>
+            </div>
+        </li>
+    </ul>
+</div>
+
+<ng-template #renderMenu let-items="items">
+    <li *ngFor="let subMenu of items" class="nav-item" routerLinkActive="active">
+        <a class="nav-link py-0 colorclass" *ngIf="subMenu.enable" [routerLink]="subMenu.url ? [subMenu.url] : null"
+            [attr.data-toggle]="subMenu.childMenus?.length ? 'collapse' : null"
+            [attr.data-target]="subMenu.childMenus?.length ? '#childmenu' + subMenu.id : null"
+            aria-controls="childmenu{{ subMenu.id }}" style="font-size:14px">
+            <mat-icon class="submenuAlign">{{ subMenu.icon }}</mat-icon>
+            &nbsp;{{ subMenu.name }}
+        </a>
+        <div *ngIf="subMenu.childMenus?.length" class="collapse" [attr.id]="'childmenu' + subMenu.id">
+            <ul class="flex-column pl-3 nav">
+                <ng-container *ngTemplateOutlet="renderMenu; context: { items: subMenu.childMenus }"></ng-container>
+            </ul>
+        </div>
+    </li>
+</ng-template> -->
+
+
+
+<div class="logo">
+    <a class="simple-text">
+        <div>
+            <img style="width: 120px;" src="assets/img/image.png" />
+        </div>
+    </a>
+</div>
+
+<div class="sidebar-wrapper">
+    <ul class="nav">
+        <li *ngFor="let menu of menuItems" class="nav-item" routerLinkActive="active">
+            <a class="nav-link collapsed text-truncate colorclass" *ngIf="menu.enable"
+                [routerLink]="menu.url ? [menu.url] : null" (click)="toggleMenu(menu.id)">
+                <span class="d-none d-sm-inline">
+                    <mat-icon>{{ menu.icon }}</mat-icon>
+                    &nbsp;{{ menu.name }}
+                </span>
+            </a>
+
+            <div *ngIf="menu.subMenus?.length" class="submenu-container" [ngClass]="{'show': activeMenuId === menu.id}"
+                [attr.id]="'submenu' + menu.id">
+                <ul class="flex-column pl-2 nav">
+                    <ng-container
+                        *ngTemplateOutlet="renderMenu; context: { items: menu.subMenus, parentId: menu.id }"></ng-container>
+                </ul>
+            </div>
+        </li>
+    </ul>
+</div>
+
+<ng-template #renderMenu let-items="items" let-parentId="parentId">
+    <li *ngFor="let subMenu of items" class="nav-item" routerLinkActive="active">
+        <a class="nav-link py-0 colorclass" *ngIf="subMenu.enable" [routerLink]="subMenu.url ? [subMenu.url] : null"
+            (click)="toggleSubMenu(parentId, subMenu.id)" style="font-size:14px">
+            <mat-icon class="submenuAlign">{{ subMenu.icon }}</mat-icon>
+            &nbsp;{{ subMenu.name }}
+        </a>
+
+        <div *ngIf="subMenu.childMenus?.length" class="submenu-container"
+            [ngClass]="{'show': activeSubMenuIds[parentId] === subMenu.id}" [attr.id]="'childmenu' + subMenu.id">
+            <ul class="flex-column pl-3 nav">
+                <ng-container
+                    *ngTemplateOutlet="renderMenu; context: { items: subMenu.childMenus, parentId: subMenu.id }"></ng-container>
+            </ul>
+        </div>
+    </li>
+</ng-template>

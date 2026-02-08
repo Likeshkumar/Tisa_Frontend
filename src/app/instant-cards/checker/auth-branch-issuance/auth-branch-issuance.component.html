@@ -1,0 +1,230 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-custom-red">
+                        <div class="row">
+                            <div class="col-sm-9">
+                                <h4 class="card-title">Authorize Branch Issuance</h4>
+                            </div>
+                            <div class="col-sm-3">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-body" style="margin-top: 20px;">
+                        <form>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>From Date</mat-label>
+                                        <input matInput [matDatepicker]="fromDatePicker" [(ngModel)]="fromDate"
+                                            [ngModelOptions]="{standalone: true}" [max]="today" readonly>
+                                        <mat-hint>MM/DD/YYYY</mat-hint>
+                                        <mat-datepicker-toggle matSuffix [for]="fromDatePicker"></mat-datepicker-toggle>
+                                        <mat-datepicker #fromDatePicker></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-3">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>To Date</mat-label>
+                                        <input matInput [matDatepicker]="toDatePicker" [(ngModel)]="toDate" readonly
+                                            [ngModelOptions]="{standalone: true}" [min]="fromDate" [max]="today">
+                                        <mat-hint>MM/DD/YYYY</mat-hint>
+                                        <mat-datepicker-toggle matSuffix [for]="toDatePicker"></mat-datepicker-toggle>
+                                        <mat-datepicker #toDatePicker></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-sm-3">
+                                    <mat-form-field class="example-full-width">
+                                        <mat-label>Filter option</mat-label>
+                                        <mat-select [(ngModel)]="filtervalue" [ngModelOptions]="{standalone: true}"
+                                            (click)="clearfilter()" (change)="clearfilter()">
+                                            <!-- <mat-option value="all">
+                                                All
+                                            </mat-option>
+                                            <mat-option value="product">
+                                                Product
+                                            </mat-option> -->
+                                            <mat-option value="branch">
+                                                Branch
+                                            </mat-option>
+                                            <!-- <mat-option value="both">
+                                                Both
+                                            </mat-option> -->
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-3">
+                                    <mat-form-field *ngIf="filtervalue=='product' || filtervalue =='both'">
+                                        <mat-select placeholder="Product" [(ngModel)]="productObj"
+                                            [ngModelOptions]="{standalone: true}">
+                                            <mat-select-filter placeholder="Search" [displayMember]="'productCode'"
+                                                [array]="productlist" (filteredReturn)="filteredList1 = $event">
+                                            </mat-select-filter>
+                                            <mat-option *ngFor="let item of filteredList1" [value]="item">
+                                                {{ item.productCode }} - {{ item.productDesc }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+
+                                    <!-- <mat-form-field *ngIf="filtervalue === 'branch'">
+                                        <mat-select placeholder="Branch" [(ngModel)]="branchObj"
+                                            [ngModelOptions]="{standalone: true}">
+                                            <mat-select-filter placeholder="Search" [displayMember]="'branchCode'"
+                                                [array]="branchlist"
+                                                (filteredReturn)="filteredList2 = $event"></mat-select-filter>
+                                            <mat-option *ngFor="let item of filteredList2" [value]="item">
+                                                {{item.branchCode}} - {{item.branchName}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field> -->
+                                    <!-- sathish -->
+
+                                    <mat-form-field *ngIf="filtervalue === 'branch'">
+                                    <mat-select
+                                        placeholder="Branch"
+                                        [(ngModel)]="branchObj"
+                                        [disabled]="isBranchDropdownDisabled"
+                                        [ngModelOptions]="{standalone: true}">
+
+                                        <mat-select-filter
+                                        placeholder="Search"
+                                        [displayMember]="'branchCode'"
+                                        [array]="branchlist"
+                                        (filteredReturn)="filteredList2 = $event">
+                                        </mat-select-filter>
+
+                                        <mat-option *ngFor="let item of filteredList2" [value]="item">
+                                        {{ item.branchCode }} - {{ item.branchName }}
+                                        </mat-option>
+
+                                    </mat-select>
+                                    </mat-form-field>
+
+
+                                </div>
+                                <div class="col-sm-3">
+                                    <mat-form-field *ngIf="filtervalue === 'both'">
+                                        <mat-select placeholder="Branch" [(ngModel)]="branchObj"
+                                            [ngModelOptions]="{standalone: true}">
+                                            <mat-select-filter placeholder="Search" [displayMember]="'branchCode'"
+                                                [array]="branchlist" (filteredReturn)="filteredList2 = $event">
+                                            </mat-select-filter>
+                                            <mat-option *ngFor="let item of filteredList2" [value]="item">
+                                                {{ item.branchCode }} - {{ item.branchName }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-sm-2">
+                                    <button mat-raised-button color="primary" style="margin-left: 100px;"
+                                        (click)="getFilterRecordList()" [disabled]="!isFilterValid()">
+                                        <mat-icon>view_list</mat-icon>&nbsp;Retrieve
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+
+
+                        <div class="row alignTable" *ngIf="showrecords">
+                            <div class="col-lg-6">
+                                <h5 class="headerWeight">Total selected: {{selection?.selected?.length}}</h5>
+                            </div>
+                            <div class="col-md-6">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Filter</mat-label>
+                                    <input (keyup)="applyFilter($event)" matInput placeholder="Ex.Customer Name" #input>
+                                    <mat-icon matSuffix>search</mat-icon>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-12 mat-elevation-z12">
+                                <div class="example-container">
+                                    <mat-checkbox hidden [checked]="selection.hasValue() && isSelectedPage()">all in
+                                        this page</mat-checkbox>
+                                    <table mat-table [dataSource]="dataSource">
+                                        <ng-container matColumnDef="select">
+                                            <th mat-header-cell *matHeaderCellDef><mat-checkbox
+                                                    (change)="$event ? masterToggle($event) : null"
+                                                    [checked]="selection.hasValue() && isEntirePageSelected()"
+                                                    [indeterminate]="selection.hasValue() && !isEntirePageSelected()"
+                                                    [aria-label]="checkboxLabel()"></mat-checkbox></th>
+
+                                            <td mat-cell *matCellDef="let row">
+                                                <mat-checkbox (click)="$event.stopPropagation()"
+                                                    (change)="$event ? selection.toggle(row) : null"
+                                                    [checked]="selection.isSelected(row)"
+                                                    [aria-label]="checkboxLabel(row)">
+                                                </mat-checkbox>
+                                            </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="productcode">
+                                            <th mat-header-cell *matHeaderCellDef> Product </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.productcode}} -
+                                                {{element.productname}}</td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="branchcode">
+                                            <th mat-header-cell *matHeaderCellDef> Branch </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.branchcode}} -
+                                                {{element.branchName}}</td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="cardtypeCode">
+                                            <th mat-header-cell *matHeaderCellDef>Type of card</th>
+                                            <td mat-cell *matCellDef="let element"> {{element.cardtypeCode}} -
+                                                {{element.cardtype}}</td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="cardNo">
+                                            <th mat-header-cell *matHeaderCellDef> Card Holder Number </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.cardNo}} </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="expdate">
+                                            <th mat-header-cell *matHeaderCellDef> Expiry Date </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.expdate}} </td>
+                                        </ng-container>
+
+                                        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                                        <tr class="mat-row" *matNoDataRow>
+                                            <td class="mat-cell" colspan="6">No Records Found!!!!!</td>
+                                        </tr>
+
+                                    </table>
+
+                                    <mat-paginator [pageSizeOptions]="[50,100,500,1000,2000]" showFirstLastButtons
+                                        aria-label="Select page of periodic elements">
+                                    </mat-paginator>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <br>
+                        <div class="submitbuttoncontainer" *ngIf="showrecords && data.length!=0">
+                            <div class="col-sm-4">
+                                <h5 style="font-weight: 900;">Total No. of Cards - {{data.length}}</h5>
+                            </div>
+                            <div class="row d-flex justify-content-center align-items-center">
+                                <button mat-raised-button color="primary" (click)="authorizeIssueCard()">
+                                    <mat-icon>check_circle_outline</mat-icon>&nbsp;Authorize&nbsp;
+                                </button>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button mat-raised-button color="warn" (click)="rejectIssueCard()">
+                                    <mat-icon>check_circle_outline</mat-icon>&nbsp;Reject&nbsp;
+                                </button>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button mat-raised-button color="accent" (click)="cancelinstant()">
+                                    <mat-icon>highlight_off</mat-icon>&nbsp;Cancel&nbsp;
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

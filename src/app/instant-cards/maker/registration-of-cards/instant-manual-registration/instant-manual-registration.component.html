@@ -1,0 +1,482 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header card-header-custom-red">
+                <div class="row">
+                    <div class="col-sm-9">
+                        <h4 class="card-title">Instant Customer Registration</h4>
+                        <p class="card-category"></p>
+                    </div>
+                    <div class="col-sm-3">
+                    </div>
+                </div>
+            </div>
+            <div class="card-body" style="margin-top: 30px;">
+                <div class="row" *ngIf="!showcardDetails">
+                    <div class="col-sm-5">
+                        <mat-form-field class="example-full-width" appearance="outline">
+                            <mat-label>Enter Card Number</mat-label>
+                            <input type="text" matInput name="cardNo" [(ngModel)]="cardNo" #cardNoModel="ngModel"
+                                required pattern="^[0-9]*$" maxlength="16" minlength="16">
+                            <mat-error *ngIf="cardNoModel.invalid && cardNoModel.touched">
+                                <ng-container *ngIf="cardNoModel.errors?.['pattern']">
+                                    Only numbers are allowed.
+                                </ng-container>
+                                <ng-container *ngIf="cardNoModel.errors?.['maxlength']">
+                                    Maximum 16 digits allowed.
+                                </ng-container>
+                                <ng-container *ngIf="cardNoModel.errors?.['minlength']">
+                                    Minimum 16 digits allowed.
+                                </ng-container>
+                                <ng-container *ngIf="cardNoModel.errors?.['required']">
+                                    Card number is required.
+                                </ng-container>
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-5">
+                        <button mat-raised-button style="margin-top: 15px;" color="primary" (click)="search()">
+                            <mat-icon>search</mat-icon>Search</button>
+                    </div>
+                </div>
+                <div class="row" *ngIf="showcardDetails">
+
+                    <div class="col-md-6" style="margin-top: 24px;">
+                        <table class="table m-0">
+                            <tbody>
+                                <tr>
+                                    <th>Masked CHN/CHN </th>
+                                    <td>{{customerData.chnMask}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Product</th>
+                                    <td>{{customerData.prodCode}}</td>
+                                </tr>
+                                <tr>
+                                    <th> Branch</th>
+                                    <td>{{customerData.PBranchCode}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <button mat-raised-button style="float: right;margin-top: -34px;margin-bottom: 24px;"
+                            color="primary" (click)="backtosearch()">
+                            <mat-icon>arrow_back</mat-icon>&nbsp;&nbsp;Back</button>
+                        <table class="table m-0">
+                            <tbody>
+                                <tr>
+                                    <th>Type of Card</th>
+                                    <td>{{customerData.typeofcardDesc}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Registration Date</th>
+                                    <td>{{customerData.regDate}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Expiry Date</th>
+                                    <td>{{customerData.expDate}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="col-md-12">
+                        <mat-stepper [linear]="isLinear" #stepper>
+                            <mat-step [stepControl]="secondFormGroup" label="Account Level Information">
+                                <form [formGroup]="secondFormGroup">
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <mat-form-field>
+                                                <mat-label>Account Number</mat-label>
+                                                <input matInput type="tel" formControlName="accountNo"
+                                                    placeholder="Enter Account Number" minlength="16" maxlength="16">
+                                                <mat-error *ngIf="secondFormGroup.invalid">
+                                                    Enter the Number and Maximum 16 numbers only
+                                                </mat-error>
+                                                <mat-error *ngIf="secondFormGroup.get('accountNo').hasError('pattern')">
+                                                    Enter exactly 16 digits
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <mat-form-field>
+                                                <mat-label>Account Type</mat-label>
+                                                <mat-select formControlName="acctType"
+                                                    (selectionChange)="getAccSubTypeList()">
+                                                    <mat-option *ngFor="let acctType of acctTypeList"
+                                                        [value]="acctType.accttype">
+                                                        {{ acctType.accttype }} - {{ acctType.acctdesc }}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-option *ngIf="acctTypeList?.length === 0">No Records
+                                                    Found</mat-option>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <mat-form-field>
+                                                <mat-label>Account Sub Type</mat-label>
+                                                <mat-select formControlName="acctSubType" (selectionChange)="getFee()">
+                                                    <mat-option *ngFor="let acctSub of acctSubTypeList"
+                                                        [value]="acctSub.subAcctType">
+                                                        {{ acctSub.subAcctType }} - {{ acctSub.subAcctDesc }}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <mat-form-field>
+                                                <mat-label>Fee</mat-label>
+                                                <mat-select formControlName="feeCode">
+                                                    <mat-option *ngFor="let element of data"
+                                                        [value]="element.schemeCode">
+                                                        {{ element.schemeCode }} - {{ element.schemeDescription }}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <mat-form-field class="example-full-width">
+                                                <mat-label>Currency</mat-label>
+                                                <mat-select formControlName="currency">
+                                                    <mat-option [value]="currency.currencyCode"
+                                                        *ngFor="let currency of currencylist">{{currency.currencyCode}}
+                                                        - {{currency.currencyDesc}}</mat-option>
+                                                    <mat-option *ngIf="currencylist?.length === 0">No Records
+                                                        Found</mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <button mat-button matStepperPrevious>Back</button>
+                                        <button mat-button matStepperNext>Next</button>
+                                    </div>
+                                </form>
+                            </mat-step>
+                            <mat-step [stepControl]="thirdFormGroup" label="Customer Level Information">
+                                <form [formGroup]="thirdFormGroup">
+                                    <div class="row">
+                                        <div class="col-sm-4" *ngIf="cmsData?.custid_gen === 'Manual'">
+                                            <mat-form-field>
+                                                <mat-label>Customer Id</mat-label>
+                                                <input matInput type="tel" formControlName="customerId"
+                                                    placeholder="Enter Customer Id" maxlength="6" minlength="6">
+                                                <mat-error
+                                                    *ngIf="thirdFormGroup.get('customerId')?.hasError('required')">
+                                                    Customer ID is required.
+                                                </mat-error>
+                                                <mat-error
+                                                    *ngIf="thirdFormGroup.get('customerId')?.hasError('pattern')">
+                                                    Enter exactly 6 digits.
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="col-sm-4">
+                                            <mat-form-field class="example-full-width">
+                                                <mat-label>Gender</mat-label>
+                                                <mat-select formControlName="gender">
+                                                    <mat-option value="M">Male</mat-option>
+                                                    <mat-option value="F">Female</mat-option>
+                                                </mat-select>
+                                                <mat-error *ngIf="thirdFormGroup.get('gender')?.hasError('required')">
+                                                    Gender is required.
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <mat-form-field>
+                                                <mat-label>Customer Name</mat-label>
+                                                <input matInput formControlName="encodingname"
+                                                    placeholder="Customer Name">
+                                                <mat-error
+                                                    *ngIf="thirdFormGroup.get('encodingname')?.hasError('required')">
+                                                    Customer Name is required.
+                                                </mat-error>
+                                                <mat-error
+                                                    *ngIf="thirdFormGroup.get('encodingname')?.hasError('maxlength')">
+                                                    Customer Name cannot exceed 24 characters.
+                                                </mat-error>
+                                                <mat-error
+                                                    *ngIf="thirdFormGroup.get('encodingname')?.hasError('pattern')">
+                                                    Alphabets and spaces only allowed.
+                                                </mat-error>
+                                                <mat-error
+                                                    *ngIf="thirdFormGroup.get('encodingname')?.hasError('whitespace')">
+                                                    Only spaces are not allowed.
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <mat-form-field>
+                                                <mat-label>Date of Birth</mat-label>
+                                                <input matInput [matDatepicker]="picker3" formControlName="dateofBirth">
+                                                <mat-hint>MM/DD/YYYY</mat-hint>
+                                                <mat-datepicker-toggle matSuffix
+                                                    [for]="picker3"></mat-datepicker-toggle>
+                                                <mat-datepicker #picker3></mat-datepicker>
+                                                <mat-error
+                                                    *ngIf="thirdFormGroup.get('dateofBirth')?.hasError('invalidDate')">
+                                                    Date of Birth cannot be in the future.
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <mat-form-field>
+                                                <mat-label>Mother / Spouse Name</mat-label>
+                                                <input matInput formControlName="spouseName"
+                                                    placeholder="Mother / Spouse Name">
+                                                <mat-error
+                                                    *ngIf="thirdFormGroup.get('spouseName')?.hasError('maxlength')">
+                                                    Name cannot exceed 24 characters.
+                                                </mat-error>
+                                                <mat-error
+                                                    *ngIf="thirdFormGroup.get('spouseName')?.hasError('pattern')">
+                                                    Alphabets and spaces only allowed.
+                                                </mat-error>
+                                                <mat-error
+                                                    *ngIf="thirdFormGroup.get('spouseName')?.hasError('whitespace')">
+                                                    Only spaces are not allowed.
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <button mat-button matStepperPrevious>Back</button>
+                                        <button mat-button matStepperNext>Next</button>
+                                    </div>
+                                </form>
+                            </mat-step>
+
+                            <mat-step [stepControl]="fourthFormGroup" label="Contact Information">
+
+                                <form [formGroup]="fourthFormGroup">
+
+                                    <!-- <h5 style="font-weight: bold;">Residence Address</h5> -->
+
+                                    <!-- <div class="row">
+                                        <div class="col-sm-4">
+                                            <mat-form-field>
+                                                <mat-label>Address Line 1</mat-label>
+                                                <input matInput formControlName="addressline1"
+                                                    placeholder="Ex. 1 Main St, New York, NY">
+                                                <mat-error
+                                                    *ngIf="fourthFormGroup.controls['addressline1'].hasError('maxlength')">
+                                                    Address cannot exceed 24 characters.
+                                                </mat-error>
+                                                <mat-error
+                                                    *ngIf="fourthFormGroup.controls['addressline1'].hasError('pattern')">
+                                                    Address can only include letters, numbers, spaces, commas, periods,
+                                                    and hyphens.
+                                                </mat-error>
+                                                <mat-error
+                                                    *ngIf="fourthFormGroup.controls['addressline1'].hasError('required')">
+                                                    Address is required.
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="col-sm-4">
+                                            <mat-form-field>
+                                                <mat-label>Address Line 2</mat-label>
+                                                <input matInput formControlName="addressline2"
+                                                    placeholder="Ex. 1 Main St, New York, NY">
+                                                <mat-error
+                                                    *ngIf="fourthFormGroup.controls['addressline2'].hasError('maxlength')">
+                                                    Address cannot exceed 24 characters.
+                                                </mat-error>
+                                                <mat-error
+                                                    *ngIf="fourthFormGroup.controls['addressline2'].hasError('pattern')">
+                                                    Address can only include letters, numbers, spaces, commas, periods,
+                                                    and hyphens.
+                                                </mat-error>
+                                                <mat-error
+                                                    *ngIf="fourthFormGroup.controls['addressline2'].hasError('required')">
+                                                    Address is required.
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="col-sm-4">
+                                            <mat-form-field>
+                                                <mat-label>City</mat-label>
+                                                <input matInput formControlName="city" placeholder="City">
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="col-sm-4">
+                                            <mat-form-field>
+                                                <mat-label>State</mat-label>
+                                                <input matInput formControlName="state" placeholder="State">
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="col-sm-4">
+                                            <mat-form-field>
+                                                <mat-label>Pincode</mat-label>
+                                                <input matInput formControlName="pincode" placeholder="Pincode">
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="col-sm-4">
+                                            <mat-form-field>
+                                                <mat-label>Country</mat-label>
+                                                <input matInput formControlName="country" placeholder="Country">
+                                            </mat-form-field>
+                                        </div>
+
+                                    </div> -->
+
+                                    <h5 style="font-weight: bold;">Mailing Address</h5>
+
+                                    <!-- <div class="row">
+                                        <div class="col-sm-12">
+                                            <mat-checkbox formControlName="autoFillMailingAddress"
+                                                (change)="autoFillMailing()">
+                                                "Click the checkbox to set the Residence Address as the Mailing
+                                                Address."
+                                            </mat-checkbox>
+                                        </div>
+                                    </div> -->
+
+
+                                    <div class="row">
+
+                                        <div class="col-sm-4">
+                                            <mat-form-field>
+                                                <mat-label>Address Line 1</mat-label>
+                                                <input matInput formControlName="mailaddressline1"
+                                                    placeholder="Ex. 1 Main St, New York, NY">
+                                                <mat-error
+                                                    *ngIf="fourthFormGroup.controls['mailaddressline1'].hasError('maxlength')">
+                                                    Address cannot exceed 35 characters.
+                                                </mat-error>
+                                                <mat-error
+                                                    *ngIf="fourthFormGroup.controls['mailaddressline1'].hasError('pattern')">
+                                                    Address can only include letters, numbers, spaces, commas, periods,
+                                                    hyphens, slashes, and apostrophes.
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="col-sm-4">
+                                            <mat-form-field>
+                                                <mat-label>Address Line 2</mat-label>
+                                                <input matInput formControlName="mailaddressline2"
+                                                    placeholder="Ex. 1 Main St, New York, NY">
+                                                <mat-error
+                                                    *ngIf="fourthFormGroup.controls['mailaddressline2'].hasError('maxlength')">
+                                                    Address cannot exceed 35 characters.
+                                                </mat-error>
+                                                <mat-error
+                                                    *ngIf="fourthFormGroup.controls['mailaddressline2'].hasError('pattern')">
+                                                    Address can only include letters, numbers, spaces, commas, periods,
+                                                    hyphens, slashes, and apostrophes.
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="col-sm-4">
+                                            <mat-form-field>
+                                                <mat-label>City</mat-label>
+                                                <input matInput formControlName="mailcity" placeholder="City">
+                                                <mat-error
+                                                    *ngIf="fourthFormGroup.controls['mailcity'].hasError('maxlength')">
+                                                    City cannot exceed 35 characters.
+                                                </mat-error>
+                                                <mat-error
+                                                    *ngIf="fourthFormGroup.controls['mailcity'].hasError('pattern')">
+                                                    City can only include characters and spaces
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+
+                                        <!-- <div class="col-sm-4">
+                                            <mat-form-field>
+                                                <mat-label>State</mat-label>
+                                                <input matInput formControlName="mailstate" placeholder="State">
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="col-sm-4">
+                                            <mat-form-field>
+                                                <mat-label>Pincode</mat-label>
+                                                <input matInput type="tel" formControlName="mailpincode"
+                                                    placeholder="Pincode" maxlength="6">
+                                            </mat-form-field>
+                                        </div> -->
+
+                                        <div class="col-sm-4">
+                                            <mat-form-field>
+                                                <mat-label>Country</mat-label>
+                                                <input matInput formControlName="mailcountry" placeholder="Country">
+                                                <mat-error
+                                                    *ngIf="fourthFormGroup.controls['mailcountry'].hasError('maxlength')">
+                                                    Country cannot exceed 35 characters.
+                                                </mat-error>
+                                                <mat-error
+                                                    *ngIf="fourthFormGroup.controls['mailcountry'].hasError('pattern')">
+                                                    Country can only include characters and spaces
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="col-sm-4">
+                                            <mat-form-field>
+                                                <mat-label>Mobile No</mat-label>
+                                                <input matInput type="tel" formControlName="mobNo"
+                                                    placeholder="Mobile No" maxlength="9">
+                                                <mat-error *ngIf="fourthFormGroup.invalid">
+                                                    Enter the Numbers only
+                                                </mat-error>
+                                                <mat-error *ngIf="fourthFormGroup.get('mobNo').hasError('pattern')">
+                                                    Enter exactly 9 Numbers
+                                                </mat-error>
+                                                <mat-error *ngIf="fourthFormGroup.get('mobNo').hasError('required')">
+                                                    Mobile No is required
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="col-sm-4">
+                                            <mat-form-field>
+                                                <mat-label>Email Id</mat-label>
+                                                <input matInput type="email" formControlName="emailId"
+                                                    placeholder="Email Id">
+                                                <mat-error *ngIf="fourthFormGroup.get('emailId').hasError('email')">
+                                                    Please enter a valid email address
+                                                </mat-error>
+                                                <mat-error
+                                                    *ngIf="fourthFormGroup.controls['emailId'].hasError('maxlength')">
+                                                    Email cannot exceed 50 characters.
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <ng-template matStepLabel>Contact Information</ng-template>
+                                    <div>
+                                        <button mat-button matStepperPrevious>Back</button>
+                                        <button mat-button matStepperNext>Next</button>
+                                    </div>
+                                </form>
+                            </mat-step>
+                            <mat-step>
+                                <ng-template matStepLabel>Confirm</ng-template>
+                                <p>Please review the details and click Submit to proceed</p>
+                                <div>
+                                    <button mat-button matStepperPrevious>Back</button>
+                                    <button mat-button (click)="stepper.reset()">Reset</button>
+                                    <button mat-button (click)="addcustomerEntry()">Submit</button>
+                                </div>
+                            </mat-step>
+                        </mat-stepper>
+
+                        <!-- </form> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
